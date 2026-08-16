@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- PAGE META + GLOBAL ASSETS -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Phase Shift Studio designs and builds high-performance websites and apps for modern businesses." />
@@ -8,8 +9,12 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <!-- DECORATIVE CURSOR EFFECT -->
   <div class="cursor-glow" aria-hidden="true"></div>
 
+  <!-- =========================
+       SITE HEADER + NAVIGATION
+       ========================= -->
   <header class="site-header">
     <a class="brand" href="#top" aria-label="Phase Shift Studio home">
       <span class="brand-mark">PS/</span>
@@ -40,7 +45,11 @@
     </nav>
   </header>
 
+  <!-- =========================
+       MAIN PAGE CONTENT
+       ========================= -->
   <main id="top">
+    <!-- HERO / FIRST IMPRESSION -->
     <section class="hero section-shell">
       <div class="eyebrow reveal">
         <span>INDEPENDENT DIGITAL STUDIO</span>
@@ -93,6 +102,7 @@
       </div>
     </section>
 
+    <!-- SERVICES SECTION -->
     <section class="section-shell section-block" id="services">
       <div class="section-heading reveal">
         <p>SEC // 002</p>
@@ -149,6 +159,7 @@
       </div>
     </section>
 
+    <!-- PROCESS SECTION -->
     <section class="section-shell section-block process" id="process">
       <div class="section-heading reveal">
         <p>SEC // 003</p>
@@ -166,6 +177,7 @@
       </div>
     </section>
 
+    <!-- SELECTED WORK / PORTFOLIO SECTION -->
     <section class="section-shell section-block" id="work">
       <div class="section-heading reveal">
         <p>SEC // 004</p>
@@ -197,6 +209,8 @@
       <p class="work-note reveal">* Concept showcase content — replace with your real projects, screenshots and client outcomes.</p>
     </section>
 
+    <!-- PRICING SECTION
+         Later we can add the One-Time vs Subscription toggle here. -->
     <section class="section-shell section-block pricing" id="pricing">
       <div class="section-heading reveal">
         <p>SEC // 005</p>
@@ -206,6 +220,7 @@
         </div>
       </div>
 
+      <!-- Three pricing cards. Prices/content live here; visual styling is in styles.css. -->
       <div class="pricing-grid">
         <article class="price-card reveal">
           <p>&lt; STARTER &gt;</p>
@@ -235,6 +250,7 @@
       <p class="pricing-note reveal">Every project is different. These are starting points only — final pricing depends on scope, features and content requirements.</p>
     </section>
 
+    <!-- CONTACT / ENQUIRY SECTION -->
     <section class="section-shell section-block contact" id="contact">
       <div class="contact-grid">
         <div class="contact-copy reveal">
@@ -245,6 +261,7 @@
           <div class="contact-mini"><span>WEB</span><span>APP</span><span>UI/UX</span><span>DEV</span></div>
         </div>
 
+        <!-- This form is intercepted by script.js and opens the visitor's email app using mailto:. -->
         <form class="contact-form reveal" id="contact-form">
           <label>NAME<input type="text" name="name" placeholder="Your name" required /></label>
           <label>EMAIL<input type="email" name="email" placeholder="you@business.com" required /></label>
@@ -264,6 +281,9 @@
     </section>
   </main>
 
+  <!-- =========================
+       SITE FOOTER
+       ========================= -->
   <footer class="site-footer section-shell">
     <div class="footer-brand"><span class="brand-mark">PS/</span><strong>PHASE SHIFT STUDIO</strong></div>
     <div class="footer-columns">
@@ -274,6 +294,7 @@
     <div class="footer-bottom"><span>© 2026 PHASE SHIFT STUDIO</span><span>DESIGN // BUILD // LAUNCH</span><a href="#top">BACK TO TOP ↑</a></div>
   </footer>
 
+  <!-- PAGE INTERACTIONS / MENU / REVEAL ANIMATIONS / CONTACT FORM -->
   <script src="script.js"></script>
 </body>
 </html>
