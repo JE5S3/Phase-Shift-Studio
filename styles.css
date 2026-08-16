@@ -226,8 +226,9 @@ h1 span, .contact-copy h2 span { color: var(--red); }
    ========================= */
 .reveal { opacity:0; transform:translateY(18px); transition:opacity .65s ease, transform .65s ease; }
 .reveal.visible { opacity:1; transform:none; }
-.cursor-glow { position:fixed; width:300px; height:300px; border-radius:50%; pointer-events:none; z-index:-1; background:radial-gradient(circle, rgba(227,27,35,.08), transparent 65%); transform:translate(-50%,-50%); }
-
+.cursor-glow {
+  display: none;
+}
 /* =========================
    12. TABLET / SMALL LAPTOP RESPONSIVE RULES
    ========================= */
