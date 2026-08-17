@@ -225,6 +225,45 @@ h1 span, .contact-copy h2 span { color: var(--red); }
 .contact-form .btn { border:0; margin-top:4px; }
 .form-status { min-height:18px; margin:0; font:10px monospace; color:var(--red); }
 
+
+/* Project enquiry form structure */
+.form-section-title {
+  grid-column:1/-1;
+  margin:8px 0 0;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+  font:10px monospace;
+  letter-spacing:.08em;
+  color:var(--red);
+}
+.form-section-title:first-of-type { border-top:0; padding-top:0; }
+
+.check-group {
+  grid-column:1/-1;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px 22px;
+}
+
+.check-option {
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center;
+  gap:10px !important;
+  padding:12px 0;
+  border-bottom:1px solid var(--line);
+  cursor:pointer;
+}
+
+.check-option input {
+  width:auto !important;
+  margin:0;
+  padding:0;
+  accent-color:var(--red);
+}
+
+.conditional-field[hidden] { display:none; }
+
 /* =========================
    10. FOOTER
    ========================= */
@@ -241,7 +280,6 @@ h1 span, .contact-copy h2 span { color: var(--red); }
    ========================= */
 .reveal { opacity:0; transform:translateY(18px); transition:opacity .65s ease, transform .65s ease; }
 .reveal.visible { opacity:1; transform:none; }
-.cursor-glow { position:fixed; width:300px; height:300px; border-radius:50%; pointer-events:none; z-index:-1; background:radial-gradient(circle, rgba(227,27,35,.08), transparent 65%); transform:translate(-50%,-50%); }
 
 /* =========================
    12. TABLET / SMALL LAPTOP RESPONSIVE RULES
@@ -295,10 +333,10 @@ h1 span, .contact-copy h2 span { color: var(--red); }
   .pricing-toolbar > p { text-align:left; }
   .contact-form { grid-template-columns:1fr; padding:35px 0; }
   .contact-form label, .full { grid-column:1; }
+  .check-group { grid-template-columns:1fr; }
   .contact-copy { padding:42px 0; }
   .footer-columns { grid-template-columns:1fr; gap:35px; }
   .footer-bottom { flex-direction:column; gap:10px; }
-  .cursor-glow { display:none; }
 }
 
 /* =========================

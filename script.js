@@ -98,33 +98,94 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 
 // =========================
-// 4. CURSOR GLOW EFFECT
+// 5. PROJECT ENQUIRY FORM
 // =========================
-// Move the decorative red glow so it follows the pointer.
-const glow = document.querySelector('.cursor-glow');
-window.addEventListener('pointermove', e => {
-  glow.style.left = `${e.clientX}px`;
-  glow.style.top = `${e.clientY}px`;
-});
+// Budget options change automatically to match the visitor's payment preference.
 
-
-// =========================
-// 5. CONTACT FORM
-// =========================
-// The current form does NOT submit to a server.
-// Instead, it builds a mailto: link and opens the visitor's email app.
 const form = document.getElementById('contact-form');
 const status = document.getElementById('form-status');
+const paymentPreference = document.getElementById('payment-preference');
+const budgetSelect = document.getElementById('budget-select');
+const hasWebsite = document.getElementById('has-website');
+const currentWebsiteField = document.getElementById('current-website-field');
+
+function populateBudgetOptions(mode) {
+  let options;
+
+  if (mode === 'monthly') {
+    options = BUDGET_OPTIONS.monthly;
+  } else if (mode === 'oneTime') {
+    options = BUDGET_OPTIONS.oneTime;
+  } else {
+    options = [
+      ...BUDGET_OPTIONS.oneTime,
+      ...BUDGET_OPTIONS.monthly.map(option => `${option} (monthly)`),
+      'Not sure yet'
+    ];
+  }
+
+  const uniqueOptions = [...new Set(options)];
+  budgetSelect.innerHTML = uniqueOptions
+    .map(option => `<option value="${option}">${option}</option>`)
+    .join('');
+}
+
+paymentPreference.addEventListener('change', () => {
+  populateBudgetOptions(paymentPreference.value);
+});
+
+hasWebsite.addEventListener('change', () => {
+  const showField = hasWebsite.value === 'Yes';
+  currentWebsiteField.hidden = !showField;
+
+  const urlInput = currentWebsiteField.querySelector('input');
+  if (!showField) urlInput.value = '';
+});
+
+populateBudgetOptions(paymentPreference.value);
+
 form.addEventListener('submit', e => {
   e.preventDefault();
+
   const data = new FormData(form);
-  const subject = encodeURIComponent(`Project enquiry — ${data.get('type')}`);
-  const bodyText = encodeURIComponent(
-    `Name: ${data.get('name')}\nEmail: ${data.get('email')}\nProject: ${data.get('type')}\nBudget: ${data.get('budget')}\n\n${data.get('message')}`
+  const services = data.getAll('services');
+
+  const paymentLabel =
+    data.get('payment') === 'oneTime' ? 'One-time payment' :
+    data.get('payment') === 'monthly' ? 'Monthly subscription' :
+    'Not sure yet';
+
+  const subject = encodeURIComponent(
+    `Project enquiry — ${data.get('type')} — ${data.get('name')}`
   );
+
+  const bodyText = encodeURIComponent(
+`PHASE SHIFT STUDIO — PROJECT ENQUIRY
+
+ABOUT
+Name: ${data.get('name')}
+Business: ${data.get('company') || 'Not provided'}
+Email: ${data.get('email')}
+
+PROJECT
+Project type: ${data.get('type')}
+Services: ${services.length ? services.join(', ') : 'Not selected'}
+Payment preference: ${paymentLabel}
+Current website: ${data.get('hasWebsite')}
+Website URL: ${data.get('currentWebsite') || 'N/A'}
+
+BUDGET + TIMELINE
+Budget: ${data.get('budget')}
+Target launch: ${data.get('timeline')}
+
+PROJECT BRIEF
+${data.get('message')}`
+  );
+
   status.textContent = 'OPENING YOUR EMAIL APP…';
-  // IMPORTANT: change this if you use a different business inbox.
-  window.location.href = `mailto:hello@phaseshiftstudio.com?subject=${subject}&body=${bodyText}`;
+
+  window.location.href =
+    `mailto:hello@phaseshiftstudio.com?subject=${subject}&body=${bodyText}`;
 });
 
 
@@ -140,7 +201,7 @@ const pricingPlans = {
     note: 'Every project is different. These are starting points only — final pricing depends on scope, features and content requirements.',
     plans: {
       landing: {
-        price: 'FROM <strong>$750</strong>',
+        price: `FROM <strong>$${PRICING.landingPage.oneTime.toLocaleString()}</strong>`,
         features: [
           'Single high-impact page',
           'Mobile responsive design',
@@ -149,7 +210,7 @@ const pricingPlans = {
         ]
       },
       website: {
-        price: 'FROM <strong>$1,500</strong>',
+        price: `FROM <strong>$${PRICING.customWebsite.oneTime.toLocaleString()}</strong>`,
         features: [
           'Multi-page custom website',
           'Conversion-focused UX',
@@ -158,12 +219,14 @@ const pricingPlans = {
         ]
       },
       app: {
-        price: '<strong>CUSTOM</strong> QUOTE',
+        price: PRICING.webApp.oneTime == null
+          ? '<strong>CUSTOM</strong> QUOTE'
+          : `FROM <strong>$${PRICING.webApp.oneTime.toLocaleString()}</strong>`,
         features: [
           'Product planning',
           'UI / UX design',
           'Prototype or full build',
-          'Scalable project scope'
+          'AI Integration'
         ]
       }
     }
@@ -174,7 +237,7 @@ const pricingPlans = {
     note: 'Monthly plans are starting points and are quoted to suit the project. Hosting, support and reasonable ongoing content updates are included; larger redesigns or new features may be quoted separately.',
     plans: {
       landing: {
-        price: 'FROM <strong>$99</strong> / MO',
+        price: `FROM <strong>$${PRICING.landingPage.monthly.toLocaleString()}</strong> / MO`,
         features: [
           'Design + build included',
           'Managed hosting included',
@@ -183,7 +246,7 @@ const pricingPlans = {
         ]
       },
       website: {
-        price: 'FROM <strong>$179</strong> / MO',
+        price: `FROM <strong>$${PRICING.customWebsite.monthly.toLocaleString()}</strong> / MO`,
         features: [
           'Custom multi-page website',
           'Managed hosting included',
@@ -192,7 +255,9 @@ const pricingPlans = {
         ]
       },
       app: {
-        price: '<strong>CUSTOM</strong> / MO',
+        price: PRICING.webApp.monthly == null
+          ? '<strong>CUSTOM</strong> / MO'
+          : `FROM <strong>$${PRICING.webApp.monthly.toLocaleString()}</strong> / MO`,
         features: [
           'Product + interface support',
           'Hosting / deployment support',
@@ -248,3 +313,6 @@ pricingButtons.forEach(button => {
     setPricingMode(button.dataset.pricingMode);
   });
 });
+
+// Render the default pricing mode using the central PRICING settings.
+setPricingMode('onetime');
