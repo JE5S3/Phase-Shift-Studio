@@ -264,6 +264,20 @@ h1 span, .contact-copy h2 span { color: var(--red); }
 
 .conditional-field[hidden] { display:none; }
 
+
+/* Web3Forms submission + anti-spam */
+.botcheck {
+  position:absolute !important;
+  width:1px !important;
+  height:1px !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+  left:-9999px !important;
+}
+.contact-form .btn:disabled { opacity:.55; cursor:wait; transform:none; }
+.form-status.success { color:#138a3d; }
+.form-status.error { color:var(--red); }
+
 /* =========================
    10. FOOTER
    ========================= */

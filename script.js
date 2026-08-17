@@ -6,13 +6,13 @@
 const PRICING = {
   landingPage: {
     label: "Landing Page",
-    oneTime: 899,
+    oneTime: 750,
     monthly: 99
   },
 
   customWebsite: {
     label: "Custom Website",
-    oneTime: 1699,
+    oneTime: 1250,
     monthly: 179
   },
 
@@ -144,48 +144,66 @@ hasWebsite.addEventListener('change', () => {
 
 populateBudgetOptions(paymentPreference.value);
 
-form.addEventListener('submit', e => {
+form.addEventListener('submit', async e => {
   e.preventDefault();
 
-  const data = new FormData(form);
-  const services = data.getAll('services');
+  const submitButton = form.querySelector('button[type="submit"]');
+  const originalButtonHTML = submitButton.innerHTML;
 
-  const paymentLabel =
-    data.get('payment') === 'oneTime' ? 'One-time payment' :
-    data.get('payment') === 'monthly' ? 'Monthly subscription' :
-    'Not sure yet';
+  status.classList.remove('success', 'error');
+  status.textContent = 'SENDING ENQUIRY…';
+  submitButton.disabled = true;
+  submitButton.innerHTML = 'SENDING… <span>↗</span>';
 
-  const subject = encodeURIComponent(
-    `Project enquiry — ${data.get('type')} — ${data.get('name')}`
-  );
+  try {
+    const formData = new FormData(form);
+    const services = formData.getAll('services');
 
-  const bodyText = encodeURIComponent(
-`PHASE SHIFT STUDIO — PROJECT ENQUIRY
+    formData.append('access_key', '12a67359-21bc-4c4f-b464-40081db6280a');
+    formData.append('subject', `New Phase Shift Studio Project Enquiry — ${formData.get('type')}`);
+    formData.append('from_name', 'Phase Shift Studio Website');
 
-ABOUT
-Name: ${data.get('name')}
-Business: ${data.get('company') || 'Not provided'}
-Email: ${data.get('email')}
+    formData.delete('services');
+    formData.append('services', services.length ? services.join(', ') : 'Not selected');
 
-PROJECT
-Project type: ${data.get('type')}
-Services: ${services.length ? services.join(', ') : 'Not selected'}
-Payment preference: ${paymentLabel}
-Current website: ${data.get('hasWebsite')}
-Website URL: ${data.get('currentWebsite') || 'N/A'}
+    const paymentValue = formData.get('payment');
+    const paymentLabel =
+      paymentValue === 'oneTime' ? 'One-time payment' :
+      paymentValue === 'monthly' ? 'Monthly subscription' :
+      'Not sure yet';
 
-BUDGET + TIMELINE
-Budget: ${data.get('budget')}
-Target launch: ${data.get('timeline')}
+    formData.set('payment', paymentLabel);
 
-PROJECT BRIEF
-${data.get('message')}`
-  );
+    if (formData.get('hasWebsite') !== 'Yes') {
+      formData.delete('currentWebsite');
+    }
 
-  status.textContent = 'OPENING YOUR EMAIL APP…';
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: formData
+    });
 
-  window.location.href =
-    `mailto:hello@phaseshiftstudio.com?subject=${subject}&body=${bodyText}`;
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || 'Submission failed');
+    }
+
+    status.classList.add('success');
+    status.textContent = 'ENQUIRY SENT — THANK YOU.';
+    form.reset();
+    currentWebsiteField.hidden = true;
+    populateBudgetOptions(paymentPreference.value);
+
+  } catch (error) {
+    console.error('Web3Forms submission error:', error);
+    status.classList.add('error');
+    status.textContent = 'SOMETHING WENT WRONG — PLEASE TRY AGAIN.';
+
+  } finally {
+    submitButton.disabled = false;
+    submitButton.innerHTML = originalButtonHTML;
+  }
 });
 
 
