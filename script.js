@@ -1,3 +1,45 @@
+// ======================================
+// PHASE SHIFT STUDIO — PRICING SETTINGS
+// Edit your prices here.
+// ======================================
+
+const PRICING = {
+  landingPage: {
+    label: "Landing Page",
+    oneTime: 750,
+    monthly: 99
+  },
+
+  customWebsite: {
+    label: "Custom Website",
+    oneTime: 1500,
+    monthly: 179
+  },
+
+  webApp: {
+    label: "Web / Mobile App",
+    oneTime: null,
+    monthly: null
+  }
+};
+
+const BUDGET_OPTIONS = {
+  oneTime: [
+    "$750 – $1,500",
+    "$1,500 – $3,000",
+    "$3,000 – $5,000",
+    "$5,000+",
+    "Not sure yet"
+  ],
+
+  monthly: [
+    "$99 – $199 / month",
+    "$200 – $349 / month",
+    "$350+ / month",
+    "Not sure yet"
+  ]
+};
+
 // =========================
 // 1. SHARED PAGE REFERENCES
 // =========================
