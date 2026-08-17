@@ -12,7 +12,7 @@ const PRICING = {
 
   customWebsite: {
     label: "Custom Website",
-    oneTime: 1500,
+    oneTime: 1250,
     monthly: 179
   },
 
