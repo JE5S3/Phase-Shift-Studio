@@ -87,8 +87,122 @@ form.addEventListener('submit', e => {
 
 
 // =========================
-// FUTURE PRICING TOGGLE
+// 6. PRICING MODE TOGGLE
 // =========================
-// Next we can add the One-Time Payment vs Subscription switch here.
-// The cleanest approach is to store both price values in data-* attributes
-// on each pricing card, then switch the displayed values with JavaScript.
+// All pricing content lives in this object so it is easy to edit later.
+// "onetime" = upfront project purchase.
+// "monthly" = lower upfront commitment with ongoing support included.
+const pricingPlans = {
+  onetime: {
+    description: 'PAY ONCE. OWN THE FINISHED BUILD.',
+    note: 'Every project is different. These are starting points only — final pricing depends on scope, features and content requirements.',
+    plans: {
+      landing: {
+        price: 'FROM <strong>$750</strong>',
+        features: [
+          'Single high-impact page',
+          'Mobile responsive design',
+          'Contact / enquiry flow',
+          'Basic SEO setup'
+        ]
+      },
+      website: {
+        price: 'FROM <strong>$1,500</strong>',
+        features: [
+          'Multi-page custom website',
+          'Conversion-focused UX',
+          'Responsive development',
+          'Launch + handover'
+        ]
+      },
+      app: {
+        price: '<strong>CUSTOM</strong> QUOTE',
+        features: [
+          'Product planning',
+          'UI / UX design',
+          'Prototype or full build',
+          'Scalable project scope'
+        ]
+      }
+    }
+  },
+
+  monthly: {
+    description: 'LOWER UPFRONT COST. SUPPORT + UPDATES INCLUDED.',
+    note: 'Monthly plans are starting points and are quoted to suit the project. Hosting, support and reasonable ongoing content updates are included; larger redesigns or new features may be quoted separately.',
+    plans: {
+      landing: {
+        price: 'FROM <strong>$99</strong> / MO',
+        features: [
+          'Design + build included',
+          'Managed hosting included',
+          'Small content updates',
+          'Ongoing technical support'
+        ]
+      },
+      website: {
+        price: 'FROM <strong>$179</strong> / MO',
+        features: [
+          'Custom multi-page website',
+          'Managed hosting included',
+          'Ongoing content updates',
+          'Priority support + maintenance'
+        ]
+      },
+      app: {
+        price: '<strong>CUSTOM</strong> / MO',
+        features: [
+          'Product + interface support',
+          'Hosting / deployment support',
+          'Ongoing improvements',
+          'Monthly scope matched to your app'
+        ]
+      }
+    }
+  }
+};
+
+const pricingButtons = document.querySelectorAll('[data-pricing-mode]');
+const priceCards = document.querySelectorAll('.price-card[data-plan]');
+const pricingDescription = document.getElementById('pricing-mode-description');
+const pricingNote = document.getElementById('pricing-note');
+
+// Render one payment mode across all three cards.
+function setPricingMode(mode) {
+  const selected = pricingPlans[mode];
+  if (!selected) return;
+
+  // Update the toggle's visual + accessibility state.
+  pricingButtons.forEach(button => {
+    const isActive = button.dataset.pricingMode === mode;
+    button.classList.toggle('active', isActive);
+    button.setAttribute('aria-pressed', String(isActive));
+  });
+
+  pricingDescription.textContent = selected.description;
+  pricingNote.textContent = selected.note;
+
+  // Brief fade/slide makes the content change feel deliberate rather than abrupt.
+  priceCards.forEach(card => card.classList.add('pricing-changing'));
+
+  window.setTimeout(() => {
+    priceCards.forEach(card => {
+      const plan = selected.plans[card.dataset.plan];
+      if (!plan) return;
+
+      card.querySelector('[data-price]').innerHTML = plan.price;
+      card.querySelector('[data-features]').innerHTML = plan.features
+        .map(feature => `<li>${feature}</li>`)
+        .join('');
+
+      card.classList.remove('pricing-changing');
+    });
+  }, 150);
+}
+
+// Switch modes when either toggle button is clicked.
+pricingButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    setPricingMode(button.dataset.pricingMode);
+  });
+});

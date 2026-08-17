@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <!-- DECORATIVE CURSOR EFFECT -->
+  <div class="cursor-glow" aria-hidden="true"></div>
 
   <!-- =========================
        SITE HEADER + NAVIGATION
@@ -76,7 +78,7 @@
             <div class="visual-window">
               <div class="visual-bar"><i></i><i></i><i></i><span>phase.shift</span></div>
               <div class="visual-inner">
-                <div class="visual-number">UI</div>
+                <div class="visual-number">01</div>
                 <div class="visual-stack">
                   <span></span><span></span><span></span><span></span>
                 </div>
@@ -208,44 +210,69 @@
     </section>
 
     <!-- PRICING SECTION
-         Later we can add the One-Time vs Subscription toggle here. -->
+         Visitors can switch between upfront project pricing and ongoing monthly plans. -->
     <section class="section-shell section-block pricing" id="pricing">
       <div class="section-heading reveal">
         <p>SEC // 005</p>
         <div>
           <span class="section-label">[ PRICING ]</span>
-          <h2>SIMPLE STARTING POINTS</h2>
+          <h2>CHOOSE HOW YOU PAY</h2>
         </div>
       </div>
 
-      <!-- Three pricing cards. Prices/content live here; visual styling is in styles.css. -->
-      <div class="pricing-grid">
-        <article class="price-card reveal">
+      <!-- PRICING TOGGLE
+           aria-pressed tells screen readers which payment option is currently active. -->
+      <div class="pricing-toolbar reveal">
+        <div class="pricing-toggle" role="group" aria-label="Choose a payment option">
+          <button class="pricing-toggle-btn active" type="button" data-pricing-mode="onetime" aria-pressed="true">ONE-TIME</button>
+          <button class="pricing-toggle-btn" type="button" data-pricing-mode="monthly" aria-pressed="false">MONTHLY</button>
+        </div>
+        <p id="pricing-mode-description">PAY ONCE. OWN THE FINISHED BUILD.</p>
+      </div>
+
+      <!-- Three pricing cards. JavaScript swaps the price + feature list when the toggle changes. -->
+      <div class="pricing-grid" id="pricing-grid">
+        <article class="price-card reveal" data-plan="landing">
           <p>&lt; STARTER &gt;</p>
           <h3>LANDING PAGE</h3>
-          <div class="price">FROM <strong>$750</strong></div>
-          <ul><li>Single high-impact page</li><li>Mobile responsive design</li><li>Contact / enquiry flow</li><li>Basic SEO setup</li></ul>
+          <div class="price" data-price>FROM <strong>$750</strong></div>
+          <ul data-features>
+            <li>Single high-impact page</li>
+            <li>Mobile responsive design</li>
+            <li>Contact / enquiry flow</li>
+            <li>Basic SEO setup</li>
+          </ul>
           <a href="#contact">GET A QUOTE <span>→</span></a>
         </article>
 
-        <article class="price-card featured reveal">
+        <article class="price-card featured reveal" data-plan="website">
           <div class="recommended">MOST POPULAR</div>
           <p>&lt; BUSINESS &gt;</p>
           <h3>CUSTOM WEBSITE</h3>
-          <div class="price">FROM <strong>$1,500</strong></div>
-          <ul><li>Multi-page custom website</li><li>Conversion-focused UX</li><li>Responsive development</li><li>Launch + handover</li></ul>
+          <div class="price" data-price>FROM <strong>$1,500</strong></div>
+          <ul data-features>
+            <li>Multi-page custom website</li>
+            <li>Conversion-focused UX</li>
+            <li>Responsive development</li>
+            <li>Launch + handover</li>
+          </ul>
           <a href="#contact">GET A QUOTE <span>→</span></a>
         </article>
 
-        <article class="price-card reveal">
+        <article class="price-card reveal" data-plan="app">
           <p>&lt; PRODUCT &gt;</p>
           <h3>WEB / MOBILE APP</h3>
-          <div class="price"><strong>CUSTOM</strong> QUOTE</div>
-          <ul><li>Product planning</li><li>UI / UX design</li><li>Prototype or full build</li><li>Scalable project scope</li></ul>
+          <div class="price" data-price><strong>CUSTOM</strong> QUOTE</div>
+          <ul data-features>
+            <li>Product planning</li>
+            <li>UI / UX design</li>
+            <li>Prototype or full build</li>
+            <li>Scalable project scope</li>
+          </ul>
           <a href="#contact">DISCUSS YOUR APP <span>→</span></a>
         </article>
       </div>
-      <p class="pricing-note reveal">Every project is different. These are starting points only — final pricing depends on scope, features and content requirements.</p>
+      <p class="pricing-note reveal" id="pricing-note">Every project is different. These are starting points only — final pricing depends on scope, features and content requirements.</p>
     </section>
 
     <!-- CONTACT / ENQUIRY SECTION -->
@@ -254,7 +281,7 @@
         <div class="contact-copy reveal">
           <p>SEC // 006 — READY?</p>
           <span class="section-label">[ START A PROJECT ]</span>
-          <h2>LET YOUR<br />BUSINESS ENTER THE NEXT<br /><span>PHASE.</span></h2>
+         <h2>LET YOUR<br />BUSINESS ENTER THE NEXT<br /><span>PHASE.</span></h2>
           <p>Tell me what you're building, what isn't working, or what you want your business to look like online.</p>
           <div class="contact-mini"><span>WEB</span><span>APP</span><span>UI/UX</span><span>DEV</span></div>
         </div>
@@ -269,7 +296,7 @@
             </select>
           </label>
           <label>BUDGET
-            <select name="budget"><option>$750 – $1,500</option><option>$1,500 – $3,000</option><option>$3,000 – $5,000</option><option>$5,000+</option><option>Not sure yet</option></select>
+            <select name="budget"><option>$750 – $1,500</option><option>$1,500 – $3,000</option><option>$3,000 – $5,000</option><option>$5,000+</option><option>Monthly subscription</option><option>Not sure yet</option></select>
           </label>
           <label class="full">PROJECT DETAILS<textarea name="message" rows="6" placeholder="What do you want to build?" required></textarea></label>
           <button class="btn btn-primary full" type="submit">SEND PROJECT ENQUIRY <span>↗</span></button>
