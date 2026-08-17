@@ -6,13 +6,13 @@
 const PRICING = {
   landingPage: {
     label: "Landing Page",
-    oneTime: 750,
+    oneTime: 899,
     monthly: 99
   },
 
   customWebsite: {
     label: "Custom Website",
-    oneTime: 1250,
+    oneTime: 1699,
     monthly: 179
   },
 
