@@ -97,6 +97,119 @@ const observer = new IntersectionObserver(entries => {
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 
+
+
+// =========================
+// 4. PROJECT SNAPSHOT SLIDERS
+// =========================
+// Each [data-slider] runs independently.
+// - Auto advances every few seconds
+// - Pauses on hover / keyboard focus
+// - Supports arrows, dots and touch swipe
+document.querySelectorAll('[data-slider]').forEach(slider => {
+  const slides = [...slider.querySelectorAll('.project-slide')];
+  const dotsContainer = slider.querySelector('.slider-dots');
+  const prevButton = slider.querySelector('.slider-prev');
+  const nextButton = slider.querySelector('.slider-next');
+
+  if (slides.length < 2) return;
+
+  let currentIndex = 0;
+  let timer = null;
+  let touchStartX = 0;
+  const delay = Number(slider.dataset.delay) || 4500;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  slides.forEach((slide, index) => {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = `slider-dot${index === 0 ? ' active' : ''}`;
+    dot.setAttribute('aria-label', `Show snapshot ${index + 1}`);
+    dot.addEventListener('click', () => {
+      goToSlide(index);
+      restartAutoPlay();
+    });
+    dotsContainer.appendChild(dot);
+  });
+
+  const dots = [...dotsContainer.querySelectorAll('.slider-dot')];
+
+  function goToSlide(index) {
+    currentIndex = (index + slides.length) % slides.length;
+
+    slides.forEach((slide, slideIndex) => {
+      slide.classList.toggle('active', slideIndex === currentIndex);
+      slide.setAttribute('aria-hidden', String(slideIndex !== currentIndex));
+    });
+
+    dots.forEach((dot, dotIndex) => {
+      dot.classList.toggle('active', dotIndex === currentIndex);
+      dot.setAttribute('aria-current', dotIndex === currentIndex ? 'true' : 'false');
+    });
+  }
+
+  function nextSlide() {
+    goToSlide(currentIndex + 1);
+  }
+
+  function previousSlide() {
+    goToSlide(currentIndex - 1);
+  }
+
+  function startAutoPlay() {
+    if (reducedMotion || timer) return;
+    timer = window.setInterval(nextSlide, delay);
+  }
+
+  function stopAutoPlay() {
+    if (!timer) return;
+    window.clearInterval(timer);
+    timer = null;
+  }
+
+  function restartAutoPlay() {
+    stopAutoPlay();
+    startAutoPlay();
+  }
+
+  prevButton.addEventListener('click', () => {
+    previousSlide();
+    restartAutoPlay();
+  });
+
+  nextButton.addEventListener('click', () => {
+    nextSlide();
+    restartAutoPlay();
+  });
+
+  slider.addEventListener('mouseenter', stopAutoPlay);
+  slider.addEventListener('mouseleave', startAutoPlay);
+  slider.addEventListener('focusin', stopAutoPlay);
+  slider.addEventListener('focusout', event => {
+    if (!slider.contains(event.relatedTarget)) startAutoPlay();
+  });
+
+  slider.addEventListener('touchstart', event => {
+    touchStartX = event.changedTouches[0].clientX;
+    stopAutoPlay();
+  }, { passive: true });
+
+  slider.addEventListener('touchend', event => {
+    const touchEndX = event.changedTouches[0].clientX;
+    const distance = touchEndX - touchStartX;
+
+    if (Math.abs(distance) > 45) {
+      distance < 0 ? nextSlide() : previousSlide();
+    }
+
+    startAutoPlay();
+  }, { passive: true });
+
+  goToSlide(0);
+  startAutoPlay();
+});
+
+
 // =========================
 // 5. PROJECT ENQUIRY FORM
 // =========================
