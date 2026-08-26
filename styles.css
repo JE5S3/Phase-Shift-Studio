@@ -602,3 +602,10 @@ h1 span, .contact-copy h2 span { color: var(--red); }
   .reveal { opacity:1; transform:none; }
   .project-slide { transition:none; }
 }
+
+
+/* V1.1 — LEGAL CONSENT */
+.privacy-consent{display:flex!important;flex-direction:row!important;align-items:flex-start;gap:10px!important;padding:14px 0;font:10px/1.5 monospace!important;color:var(--muted)}
+.privacy-consent input{width:auto!important;margin:2px 0 0;accent-color:var(--red)}
+.privacy-consent a{color:var(--red);text-decoration:underline;text-underline-offset:3px}
+.footer-columns>div:last-child{gap:8px}
