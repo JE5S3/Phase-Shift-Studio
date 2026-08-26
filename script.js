@@ -271,6 +271,23 @@ form.addEventListener('submit', async e => {
   try {
     const formData = new FormData(form);
     const services = formData.getAll('services');
+    const submissionId = form.dataset.submissionId || crypto.randomUUID();
+    form.dataset.submissionId = submissionId;
+    const enquiryPayload = {
+      submissionId,
+      botcheck: formData.get('botcheck'),
+      name: formData.get('name'),
+      company: formData.get('company'),
+      email: formData.get('email'),
+      type: formData.get('type'),
+      payment: formData.get('payment'),
+      hasWebsite: formData.get('hasWebsite'),
+      currentWebsite: formData.get('currentWebsite'),
+      services,
+      budget: formData.get('budget'),
+      timeline: formData.get('timeline'),
+      message: formData.get('message')
+    };
 
     formData.append('access_key', '12a67359-21bc-4c4f-b464-40081db6280a');
     formData.append('subject', `New Phase Shift Studio Project Enquiry — ${formData.get('type')}`);
@@ -291,6 +308,16 @@ form.addEventListener('submit', async e => {
       formData.delete('currentWebsite');
     }
 
+    const draftResponse = await fetch('https://txvorfcyvxwmwpkctndg.supabase.co/functions/v1/enquiry-intake', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(enquiryPayload)
+    });
+    const draftResult = await draftResponse.json();
+    if (!draftResponse.ok || !draftResult.ok) {
+      throw new Error(draftResult.error || 'Draft quote creation failed');
+    }
+
     const response = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       body: formData
@@ -305,6 +332,7 @@ form.addEventListener('submit', async e => {
     status.classList.add('success');
     status.textContent = 'ENQUIRY SENT — THANK YOU.';
     form.reset();
+    delete form.dataset.submissionId;
     currentWebsiteField.hidden = true;
     populateBudgetOptions(paymentPreference.value);
 
