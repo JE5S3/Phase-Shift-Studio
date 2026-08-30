@@ -20,6 +20,7 @@
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
+  overflow-x: clip;
   background: var(--white);
   color: var(--black);
   font-family: Arial, Helvetica, sans-serif;
@@ -82,7 +83,7 @@ h1 span, .contact-copy h2 span { color: var(--red); }
 .panel-topline { display: flex; justify-content: space-between; padding: 18px; border-bottom: 1px solid var(--black); font: 10px monospace; }
 .hero-visual { flex: 1; min-height: 420px; display: grid; place-items: center; padding: 34px; background-image: linear-gradient(#e8e8e3 1px, transparent 1px), linear-gradient(90deg,#e8e8e3 1px,transparent 1px); background-size: 24px 24px; }
 .visual-window { width: 100%; max-width: 430px; aspect-ratio: 1/.78; background: var(--black); box-shadow: 18px 18px 0 var(--red); transform: rotate(-2.2deg); }
-.visual-bar { height: 36px; display: flex; gap: 6px; align-items: center; border-bottom: 1px solid #3a3a3a; padding: 0 12px; color: #888; font: 9px monospace; }
+.visual-bar { height: 36px; display: flex; gap: 6px; align-items: center; border-bottom: 1px solid #3a3a3a; padding: 0 12px; color: #888; font: 11px monospace; }
 .visual-bar i { width: 7px; height: 7px; border-radius: 50%; background: #444; }
 .visual-bar span { margin-left: auto; }
 .visual-inner { position: relative; height: calc(100% - 36px); overflow: hidden; padding: 24px; }
@@ -92,12 +93,12 @@ h1 span, .contact-copy h2 span { color: var(--red); }
 .visual-stack span:nth-child(2){ width:83%; margin-left:10%; background:white; }
 .visual-stack span:nth-child(3){ width:65%; margin-left:25%; }
 .visual-stack span:nth-child(4){ width:42%; margin-left:42%; background:white; }
-.visual-chip { position:absolute; left:24px; bottom:20px; color:#aaa; font:9px monospace; }
+.visual-chip { position:absolute; left:24px; bottom:20px; color:#aaa; font:11px monospace; }
 .panel-stats { display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--black); }
 .panel-stats > div { padding:18px 10px; text-align:center; border-right:1px solid var(--black); }
 .panel-stats > div:last-child { border-right:0; }
 .panel-stats strong { display:block; font-size:24px; }
-.panel-stats span { font:9px monospace; color:var(--muted); }
+.panel-stats span { font:11px monospace; color:var(--muted); }
 .ticker { overflow:hidden; border-bottom:1px solid var(--black); }
 .ticker-track { width:max-content; display:flex; gap:22px; padding:16px 0; animation:ticker 24s linear infinite; font-size:12px; font-weight:900; }
 .ticker-track b { color:var(--red); }
@@ -152,14 +153,14 @@ h1 span, .contact-copy h2 span { color: var(--red); }
 .mock-nav span { color:var(--red); }
 .mock-nav i { margin-left:auto; font:10px monospace; font-style:normal; }
 .mock-hero { min-height:340px; padding:55px 30px; background:linear-gradient(130deg,#fff 55%,#efefea 55%); position:relative; }
-.mock-hero small { font:9px monospace; color:var(--red); }
+.mock-hero small { font:11px monospace; color:var(--red); }
 .mock-hero strong { display:block; font-size:clamp(28px,4vw,60px); line-height:.92; letter-spacing:-.06em; margin-top:30px; }
 .mock-hero button { margin-top:30px; background:var(--red); border:0; color:white; padding:13px 18px; font-size:10px; font-weight:900; }
 .preview-two { background:var(--red); min-height:530px; }
 .phone-mock { width:230px; height:445px; border:7px solid var(--black); border-radius:32px; background:#fff; position:relative; z-index:2; padding:58px 22px 22px; box-shadow:0 25px 45px rgba(0,0,0,.25); transform:rotate(5deg); }
 .phone-notch { position:absolute; top:10px; width:86px; height:18px; left:50%; transform:translateX(-50%); background:var(--black); border-radius:20px; }
 .app-mark { width:45px; height:45px; display:grid; place-items:center; background:var(--red); color:white; font-weight:900; }
-.phone-mock p { margin:55px 0 12px; font:9px monospace; color:#777; }
+.phone-mock p { margin:55px 0 12px; font:11px monospace; color:#777; }
 .phone-mock h4 { font-size:22px; line-height:1.05; letter-spacing:-.04em; }
 .app-lines span { display:block; height:10px; margin:12px 0; background:#ecece7; }
 .app-lines span:nth-child(2){ width:70%; background:var(--red); }
@@ -167,7 +168,7 @@ h1 span, .contact-copy h2 span { color: var(--red); }
 .orbit-ring::before, .orbit-ring::after { content:''; position:absolute; width:18px; height:18px; background:var(--black); border-radius:50%; }
 .orbit-ring::before { top:35px; left:70px; } .orbit-ring::after { right:-8px; bottom:160px; }
 .work-meta { display:grid; grid-template-columns:1fr 1.5fr auto; gap:12px; padding:20px; border-top:1px solid var(--black); align-items:center; font-size:11px; }
-.work-meta span { font:9px monospace; color:var(--muted); }
+.work-meta span { font:11px monospace; color:var(--muted); }
 .work-meta span:last-child { color:var(--red); }
 .work-note, .pricing-note { color:var(--muted); font:10px/1.4 monospace; margin:14px 0 0; }
 
@@ -217,7 +218,7 @@ h1 span, .contact-copy h2 span { color: var(--red); }
 }
 
 .mock-page small {
-  font:9px monospace;
+  font:11px monospace;
   color:var(--red);
 }
 
@@ -239,7 +240,7 @@ h1 span, .contact-copy h2 span { color: var(--red); }
 .mock-filter-row span {
   padding:12px;
   border-right:1px solid #aaa;
-  font:9px monospace;
+  font:11px monospace;
 }
 
 .mock-filter-row span:last-child { border-right:0; }
@@ -271,7 +272,7 @@ h1 span, .contact-copy h2 span { color: var(--red); }
 .mock-spec-grid span {
   padding:14px 9px;
   background:#fff;
-  font:8px monospace;
+  font:10px monospace;
 }
 
 .mock-spec-grid b {
@@ -366,7 +367,7 @@ h1 span, .contact-copy h2 span { color: var(--red); }
 .mini-task-list span {
   padding:12px 8px;
   border-bottom:1px solid #ddd;
-  font:9px monospace;
+  font:11px monospace;
 }
 
 .mini-task-list b {
@@ -439,7 +440,7 @@ h1 span, .contact-copy h2 span { color: var(--red); }
 .featured { background:var(--black); color:white; }
 .featured .price { border-color:#333; }
 .featured a { border-color:#555; }
-.recommended { position:absolute; top:0; right:0; background:var(--red); color:white; padding:9px 12px; font:9px monospace; }
+.recommended { position:absolute; top:0; right:0; background:var(--red); color:white; padding:9px 12px; font:11px monospace; }
 
 /* =========================
    9. CONTACT / ENQUIRY FORM
@@ -451,7 +452,7 @@ h1 span, .contact-copy h2 span { color: var(--red); }
 .contact-copy h2 { font-size:clamp(52px,6vw,92px); line-height:.86; letter-spacing:-.07em; margin:22px 0 40px; }
 .contact-copy > p:not(:first-child) { max-width:520px; font-size:17px; line-height:1.45; }
 .contact-mini { display:flex; gap:7px; margin-top:40px; flex-wrap:wrap; }
-.contact-mini span { border:1px solid var(--black); padding:8px 10px; font:9px monospace; }
+.contact-mini span { border:1px solid var(--black); padding:8px 10px; font:11px monospace; }
 .contact-form { padding:52px; display:grid; grid-template-columns:repeat(2,1fr); gap:22px; align-content:start; }
 .contact-form label { font:10px monospace; display:flex; flex-direction:column; gap:10px; }
 .contact-form input, .contact-form select, .contact-form textarea { width:100%; background:transparent; color:var(--black); border:0; border-bottom:1px solid var(--black); border-radius:0; padding:13px 2px; outline:none; }
@@ -523,7 +524,7 @@ h1 span, .contact-copy h2 span { color: var(--red); }
 .footer-columns > div { display:flex; flex-direction:column; gap:10px; font-size:12px; }
 .footer-columns p { font:10px monospace; color:var(--red); margin:0 0 12px; }
 .footer-columns span { color:#555; }
-.footer-bottom { border-top:1px solid var(--black); padding:22px 0 28px; display:flex; justify-content:space-between; font:9px monospace; }
+.footer-bottom { border-top:1px solid var(--black); padding:22px 0 28px; display:flex; justify-content:space-between; font:11px monospace; }
 
 /* =========================
    11. ANIMATIONS / EFFECTS
@@ -555,7 +556,7 @@ h1 span, .contact-copy h2 span { color: var(--red); }
   .site-header { height:64px; padding:0 14px; }
   .site-nav { top:64px; height:calc(100vh - 64px); padding:30px 20px; }
   .hero { padding-top:30px; }
-  .eyebrow { gap:20px; font-size:9px; }
+  .eyebrow { gap:20px; font-size:11px; }
   .hero-grid { min-height:0; }
   .hero-copy { min-height:590px; padding:42px 0; }
   .hero-code { margin-bottom:32px; }
@@ -609,12 +610,3 @@ h1 span, .contact-copy h2 span { color: var(--red); }
 .privacy-consent input{width:auto!important;margin:2px 0 0;accent-color:var(--red)}
 .privacy-consent a{color:var(--red);text-decoration:underline;text-underline-offset:3px}
 .footer-columns>div:last-child{gap:8px}
-
-
-/* V3.1 — simpler enquiry form and readable technical labels */
-.contact-form label,.form-section-title,.form-status,.privacy-consent{font-size:11px!important}
-.contact-form textarea{min-height:150px}
-.contact-form .btn{font-size:11px}
-.eyebrow,.panel-stats span,.recommended,.contact-mini span,.footer-bottom{font-size:11px}
-.footer-columns p,.contact-copy>p:first-child{font-size:11px}
-@media(max-width:720px){.eyebrow{font-size:11px}.contact-form{gap:20px}.contact-form textarea{min-height:140px}}
