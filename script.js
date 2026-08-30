@@ -217,45 +217,6 @@ document.querySelectorAll('[data-slider]').forEach(slider => {
 
 const form = document.getElementById('contact-form');
 const status = document.getElementById('form-status');
-const paymentPreference = document.getElementById('payment-preference');
-const budgetSelect = document.getElementById('budget-select');
-const hasWebsite = document.getElementById('has-website');
-const currentWebsiteField = document.getElementById('current-website-field');
-
-function populateBudgetOptions(mode) {
-  let options;
-
-  if (mode === 'monthly') {
-    options = BUDGET_OPTIONS.monthly;
-  } else if (mode === 'oneTime') {
-    options = BUDGET_OPTIONS.oneTime;
-  } else {
-    options = [
-      ...BUDGET_OPTIONS.oneTime,
-      ...BUDGET_OPTIONS.monthly.map(option => `${option} (monthly)`),
-      'Not sure yet'
-    ];
-  }
-
-  const uniqueOptions = [...new Set(options)];
-  budgetSelect.innerHTML = uniqueOptions
-    .map(option => `<option value="${option}">${option}</option>`)
-    .join('');
-}
-
-paymentPreference.addEventListener('change', () => {
-  populateBudgetOptions(paymentPreference.value);
-});
-
-hasWebsite.addEventListener('change', () => {
-  const showField = hasWebsite.value === 'Yes';
-  currentWebsiteField.hidden = !showField;
-
-  const urlInput = currentWebsiteField.querySelector('input');
-  if (!showField) urlInput.value = '';
-});
-
-populateBudgetOptions(paymentPreference.value);
 
 form.addEventListener('submit', async e => {
   e.preventDefault();
@@ -266,47 +227,31 @@ form.addEventListener('submit', async e => {
   status.classList.remove('success', 'error');
   status.textContent = 'SENDING ENQUIRY…';
   submitButton.disabled = true;
-  submitButton.innerHTML = 'SENDING… <span>↗</span>';
+  submitButton.innerHTML = 'SENDING… <span>→</span>';
 
   try {
     const formData = new FormData(form);
-    const services = formData.getAll('services');
+    const projectType = String(formData.get('type') || 'Not Sure');
     const submissionId = form.dataset.submissionId || crypto.randomUUID();
     form.dataset.submissionId = submissionId;
+
     const enquiryPayload = {
       submissionId,
       botcheck: formData.get('botcheck'),
       name: formData.get('name'),
       company: formData.get('company'),
       email: formData.get('email'),
-      type: formData.get('type'),
-      payment: formData.get('payment'),
-      hasWebsite: formData.get('hasWebsite'),
-      currentWebsite: formData.get('currentWebsite'),
-      services,
-      budget: formData.get('budget'),
-      timeline: formData.get('timeline'),
+      phone: formData.get('phone'),
+      type: projectType,
+      payment: 'unsure',
+      hasWebsite: 'No',
+      services: [projectType],
       message: formData.get('message')
     };
 
     formData.append('access_key', '12a67359-21bc-4c4f-b464-40081db6280a');
-    formData.append('subject', `New Phase Shift Studio Project Enquiry — ${formData.get('type')}`);
+    formData.append('subject', `New Phase Shift Studio Enquiry — ${projectType}`);
     formData.append('from_name', 'Phase Shift Studio Website');
-
-    formData.delete('services');
-    formData.append('services', services.length ? services.join(', ') : 'Not selected');
-
-    const paymentValue = formData.get('payment');
-    const paymentLabel =
-      paymentValue === 'oneTime' ? 'One-time payment' :
-      paymentValue === 'monthly' ? 'Monthly subscription' :
-      'Not sure yet';
-
-    formData.set('payment', paymentLabel);
-
-    if (formData.get('hasWebsite') !== 'Yes') {
-      formData.delete('currentWebsite');
-    }
 
     const draftResponse = await fetch('https://txvorfcyvxwmwpkctndg.supabase.co/functions/v1/enquiry-intake', {
       method: 'POST',
@@ -318,29 +263,18 @@ form.addEventListener('submit', async e => {
       throw new Error(draftResult.error || 'Draft quote creation failed');
     }
 
-    const response = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      body: formData
-    });
-
+    const response = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: formData });
     const result = await response.json();
-
-    if (!response.ok || !result.success) {
-      throw new Error(result.message || 'Submission failed');
-    }
+    if (!response.ok || !result.success) throw new Error(result.message || 'Submission failed');
 
     status.classList.add('success');
     status.textContent = 'ENQUIRY SENT — THANK YOU.';
     form.reset();
     delete form.dataset.submissionId;
-    currentWebsiteField.hidden = true;
-    populateBudgetOptions(paymentPreference.value);
-
   } catch (error) {
-    console.error('Web3Forms submission error:', error);
+    console.error('Enquiry submission error:', error);
     status.classList.add('error');
     status.textContent = 'SOMETHING WENT WRONG — PLEASE TRY AGAIN.';
-
   } finally {
     submitButton.disabled = false;
     submitButton.innerHTML = originalButtonHTML;

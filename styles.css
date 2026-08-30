@@ -609,3 +609,12 @@ h1 span, .contact-copy h2 span { color: var(--red); }
 .privacy-consent input{width:auto!important;margin:2px 0 0;accent-color:var(--red)}
 .privacy-consent a{color:var(--red);text-decoration:underline;text-underline-offset:3px}
 .footer-columns>div:last-child{gap:8px}
+
+
+/* V3.1 — simpler enquiry form and readable technical labels */
+.contact-form label,.form-section-title,.form-status,.privacy-consent{font-size:11px!important}
+.contact-form textarea{min-height:150px}
+.contact-form .btn{font-size:11px}
+.eyebrow,.panel-stats span,.recommended,.contact-mini span,.footer-bottom{font-size:11px}
+.footer-columns p,.contact-copy>p:first-child{font-size:11px}
+@media(max-width:720px){.eyebrow{font-size:11px}.contact-form{gap:20px}.contact-form textarea{min-height:140px}}
