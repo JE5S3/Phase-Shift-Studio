@@ -11,7 +11,7 @@
   <meta property="og:url" content="https://phaseshiftstudio.com.au/" />
   <meta property="og:type" content="website" />
   <title>Phase Shift Studio — Web & App Design</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=2.1" />
 
 </head>
 <body>
@@ -248,26 +248,24 @@
           <div class="contact-mini"><span>WEB</span><span>APP</span><span>UI/UX</span><span>DEV</span></div>
         </div>
 
-        <!-- Project brief form. JavaScript submits this directly through Web3Forms. -->
+        <!-- Quick enquiry form. JavaScript preserves Web3Forms and creates an admin draft. -->
         <form class="contact-form reveal" id="contact-form">
           <input type="checkbox" name="botcheck" class="botcheck" tabindex="-1" autocomplete="off" />
 
-          <p class="form-section-title">A QUICK HELLO</p>
-
           <label>NAME *
-            <input type="text" name="name" placeholder="Your name" autocomplete="name" required />
+            <input type="text" name="name" placeholder="Your name" required />
           </label>
 
           <label>EMAIL *
-            <input type="email" name="email" placeholder="you@business.com" autocomplete="email" required />
+            <input type="email" name="email" placeholder="you@business.com" required />
           </label>
 
           <label>BUSINESS / COMPANY
-            <input type="text" name="company" placeholder="Optional" autocomplete="organization" />
+            <input type="text" name="company" placeholder="Optional" />
           </label>
 
           <label>PHONE
-            <input type="tel" name="phone" placeholder="Optional" autocomplete="tel" />
+            <input type="tel" name="phone" placeholder="Optional" />
           </label>
 
           <label class="full">WHAT DO YOU NEED? *
@@ -280,7 +278,7 @@
           </label>
 
           <label class="full">TELL ME A LITTLE ABOUT THE PROJECT *
-            <textarea name="message" rows="6" placeholder="A short description is perfect — we can work out the details together." required></textarea>
+            <textarea name="message" rows="6" placeholder="A short overview is perfect — we can work through the details together." required></textarea>
           </label>
 
           <label class="privacy-consent full"><input type="checkbox" name="privacyAccepted" required /><span>I have read and agree to the <a href="privacy.html" target="_blank">Privacy Policy</a> and acknowledge the <a href="terms.html" target="_blank">Terms &amp; Conditions</a>.</span></label>
