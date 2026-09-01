@@ -96,122 +96,27 @@ const observer = new IntersectionObserver(entries => {
 // Register every .reveal element with the observer.
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+// Start the repeating foil sheen after the pricing cards first enter view.
+const pricingGrid = document.querySelector('.pricing-grid');
+if (pricingGrid && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const pricingSheenObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.querySelectorAll('.price-card').forEach((card, index) => {
+        window.setTimeout(() => card.classList.add('sheen-played'), index * 140);
+      });
+      pricingSheenObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.3 });
+
+  pricingSheenObserver.observe(pricingGrid);
+}
+
 
 
 
 // =========================
-// 4. PROJECT SNAPSHOT SLIDERS
-// =========================
-// Each [data-slider] runs independently.
-// - Auto advances every few seconds
-// - Pauses on hover / keyboard focus
-// - Supports arrows, dots and touch swipe
-document.querySelectorAll('[data-slider]').forEach(slider => {
-  const slides = [...slider.querySelectorAll('.project-slide')];
-  const dotsContainer = slider.querySelector('.slider-dots');
-  const prevButton = slider.querySelector('.slider-prev');
-  const nextButton = slider.querySelector('.slider-next');
-
-  if (slides.length < 2) return;
-
-  let currentIndex = 0;
-  let timer = null;
-  let touchStartX = 0;
-  const delay = Number(slider.dataset.delay) || 4500;
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  slides.forEach((slide, index) => {
-    const dot = document.createElement('button');
-    dot.type = 'button';
-    dot.className = `slider-dot${index === 0 ? ' active' : ''}`;
-    dot.setAttribute('aria-label', `Show snapshot ${index + 1}`);
-    dot.addEventListener('click', () => {
-      goToSlide(index);
-      restartAutoPlay();
-    });
-    dotsContainer.appendChild(dot);
-  });
-
-  const dots = [...dotsContainer.querySelectorAll('.slider-dot')];
-
-  function goToSlide(index) {
-    currentIndex = (index + slides.length) % slides.length;
-
-    slides.forEach((slide, slideIndex) => {
-      slide.classList.toggle('active', slideIndex === currentIndex);
-      slide.setAttribute('aria-hidden', String(slideIndex !== currentIndex));
-    });
-
-    dots.forEach((dot, dotIndex) => {
-      dot.classList.toggle('active', dotIndex === currentIndex);
-      dot.setAttribute('aria-current', dotIndex === currentIndex ? 'true' : 'false');
-    });
-  }
-
-  function nextSlide() {
-    goToSlide(currentIndex + 1);
-  }
-
-  function previousSlide() {
-    goToSlide(currentIndex - 1);
-  }
-
-  function startAutoPlay() {
-    if (reducedMotion || timer) return;
-    timer = window.setInterval(nextSlide, delay);
-  }
-
-  function stopAutoPlay() {
-    if (!timer) return;
-    window.clearInterval(timer);
-    timer = null;
-  }
-
-  function restartAutoPlay() {
-    stopAutoPlay();
-    startAutoPlay();
-  }
-
-  prevButton.addEventListener('click', () => {
-    previousSlide();
-    restartAutoPlay();
-  });
-
-  nextButton.addEventListener('click', () => {
-    nextSlide();
-    restartAutoPlay();
-  });
-
-  slider.addEventListener('mouseenter', stopAutoPlay);
-  slider.addEventListener('mouseleave', startAutoPlay);
-  slider.addEventListener('focusin', stopAutoPlay);
-  slider.addEventListener('focusout', event => {
-    if (!slider.contains(event.relatedTarget)) startAutoPlay();
-  });
-
-  slider.addEventListener('touchstart', event => {
-    touchStartX = event.changedTouches[0].clientX;
-    stopAutoPlay();
-  }, { passive: true });
-
-  slider.addEventListener('touchend', event => {
-    const touchEndX = event.changedTouches[0].clientX;
-    const distance = touchEndX - touchStartX;
-
-    if (Math.abs(distance) > 45) {
-      distance < 0 ? nextSlide() : previousSlide();
-    }
-
-    startAutoPlay();
-  }, { passive: true });
-
-  goToSlide(0);
-  startAutoPlay();
-});
-
-
-// =========================
-// 5. PROJECT ENQUIRY FORM
+// 4. PROJECT ENQUIRY FORM
 // =========================
 // Budget options change automatically to match the visitor's payment preference.
 
@@ -291,7 +196,7 @@ form.addEventListener('submit', async e => {
 const pricingPlans = {
   onetime: {
     description: 'PAY ONCE. OWN THE FINISHED BUILD.',
-    note: 'Every project is different. These are starting points only — final pricing depends on scope, features and content requirements.',
+    note: 'Every project is quoted around the work that is actually useful. Start with the right first version, then add more later if it earns its place.',
     plans: {
       landing: {
         price: `FROM <strong>$${PRICING.landingPage.oneTime.toLocaleString()}</strong>`,
@@ -306,7 +211,7 @@ const pricingPlans = {
         price: `FROM <strong>$${PRICING.customWebsite.oneTime.toLocaleString()}</strong>`,
         features: [
           'Multi-page custom website',
-          'Conversion-focused UX',
+          'Workflow-focused UX',
           'Responsive development',
           'Launch + handover'
         ]
@@ -319,7 +224,7 @@ const pricingPlans = {
           'Product planning',
           'UI / UX design',
           'Prototype or full build',
-          'AI Integration'
+          'Workflow planning'
         ]
       }
     }
@@ -327,7 +232,7 @@ const pricingPlans = {
 
   monthly: {
     description: 'LOWER UPFRONT COST. SUPPORT + UPDATES INCLUDED.',
-    note: 'Monthly plans are starting points and are quoted to suit the project. Hosting, support and reasonable ongoing content updates are included; larger redesigns or new features may be quoted separately.',
+    note: 'Monthly plans keep support, hosting and smaller improvements moving. Larger new features can be added later through a package or a quoted job.',
     plans: {
       landing: {
         price: `FROM <strong>$${PRICING.landingPage.monthly.toLocaleString()}</strong> / MO`,
@@ -344,7 +249,7 @@ const pricingPlans = {
           'Custom multi-page website',
           'Managed hosting included',
           'Ongoing content updates',
-          'Priority support + maintenance'
+          'Support + maintenance'
         ]
       },
       app: {
@@ -352,7 +257,7 @@ const pricingPlans = {
           ? '<strong>CUSTOM</strong> / MO'
           : `FROM <strong>$${PRICING.webApp.monthly.toLocaleString()}</strong> / MO`,
         features: [
-          'Product + interface support',
+          'Workflow + interface support',
           'Hosting / deployment support',
           'Ongoing improvements',
           'Monthly scope matched to your app'
@@ -366,6 +271,29 @@ const pricingButtons = document.querySelectorAll('[data-pricing-mode]');
 const priceCards = document.querySelectorAll('.price-card[data-plan]');
 const pricingDescription = document.getElementById('pricing-mode-description');
 const pricingNote = document.getElementById('pricing-note');
+
+function setPriceCardFlipped(card, flipped) {
+  card.classList.toggle('flipped', flipped);
+  card.setAttribute('aria-expanded', String(flipped));
+  card.querySelector('.price-front').setAttribute('aria-hidden', String(flipped));
+  card.querySelector('.price-back').setAttribute('aria-hidden', String(!flipped));
+}
+
+priceCards.forEach(card => {
+  setPriceCardFlipped(card, false);
+
+  card.addEventListener('click', event => {
+    if (event.target.closest('a')) return;
+    setPriceCardFlipped(card, !card.classList.contains('flipped'));
+  });
+
+  card.addEventListener('keydown', event => {
+    if ((event.key === 'Enter' || event.key === ' ') && !event.target.closest('button, a')) {
+      event.preventDefault();
+      setPriceCardFlipped(card, !card.classList.contains('flipped'));
+    }
+  });
+});
 
 // Render one payment mode across all three cards.
 function setPricingMode(mode) {
@@ -408,4 +336,4 @@ pricingButtons.forEach(button => {
 });
 
 // Render the default pricing mode using the central PRICING settings.
-setPricingMode('onetime');
+setPricingMode('monthly');
