@@ -196,7 +196,7 @@ form.addEventListener('submit', async e => {
 const pricingPlans = {
   onetime: {
     description: 'PAY ONCE. OWN THE FINISHED BUILD.',
-    note: 'Every project is quoted around the work that is actually useful. Start with the right first version, then add more later if it earns its place.',
+    note: 'Every project is quoted around the work that is actually useful. Add-on or plugin services may still require monthly billing.',
     plans: {
       landing: {
         price: `FROM <strong>$${PRICING.landingPage.oneTime.toLocaleString()}</strong>`,
@@ -204,7 +204,8 @@ const pricingPlans = {
           'Single high-impact page',
           'Mobile responsive design',
           'Contact / enquiry flow',
-          'Basic SEO setup'
+          'Basic SEO setup',
+          'Google Business Profile creation'
         ]
       },
       website: {
@@ -240,7 +241,7 @@ const pricingPlans = {
           'Design + build included',
           'Managed hosting included',
           'Small content updates',
-          'Ongoing technical support'
+          'Google Business Profile creation'
         ]
       },
       website: {

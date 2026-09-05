@@ -349,6 +349,9 @@ h1 span, .contact-copy h2 span { color: var(--red); }
   --line: #d8d8d2;
   --red: #e31b23;
   --red-dark: #b81016;
+  --gold: #d9aa38;
+  --gold-dark: #6f4f08;
+  --yellow: #ffd94f;
   --espresso: #0b0b0b;
   --cream: #f7f7f4;
   --tan: #ecece7;
@@ -899,6 +902,19 @@ h1 span {
   color: #fff;
 }
 
+.creation-fee-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  background: var(--yellow);
+  color: var(--black);
+  padding: 9px 12px;
+  font: 800 11px "IBM Plex Mono", Consolas, Monaco, monospace;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
 .pricing-grid {
   gap: 18px;
   padding-top: 18px;
@@ -911,6 +927,26 @@ h1 span {
 
 .featured {
   background: var(--espresso);
+}
+
+.price-card[data-plan="app"] {
+  background: linear-gradient(135deg, #f7dfa0 0%, var(--gold) 48%, #b77e18 100%);
+  color: var(--black);
+  border-color: rgba(111,79,8,.42);
+  box-shadow: 0 22px 62px rgba(111,79,8,.2);
+}
+
+.price-card[data-plan="app"] .price {
+  border-color: rgba(111,79,8,.28);
+}
+
+.price-card[data-plan="app"] a {
+  border-top-color: rgba(111,79,8,.35);
+}
+
+.price-card[data-plan="app"] .price-card-back-toggle,
+.price-card[data-plan="app"] .price-flip {
+  color: var(--black);
 }
 
 .price strong {
@@ -935,6 +971,13 @@ h1 span {
 .pricing-note {
   margin-top: 18px;
   font-size: 12px;
+  max-width: 760px;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.pricing-tax-note {
+  margin-top: 8px;
 }
 
 .contact { padding-bottom: 110px; }
@@ -1509,6 +1552,25 @@ body::after { right: 5px; }
 .featured .price-face {
   background: var(--black);
   color: var(--white);
+}
+
+.price-card[data-plan="app"] .price-face {
+  background: linear-gradient(135deg, #f7dfa0 0%, var(--gold) 52%, #b77e18 100%);
+  color: var(--black);
+}
+
+.price-card[data-plan="app"] .price-face > p:first-child,
+.price-card[data-plan="app"] .best-for span,
+.price-card[data-plan="app"] .price-card-front-label {
+  color: var(--gold-dark);
+}
+
+.price-card[data-plan="app"] .price-back > p:not(:first-child) {
+  color: #2f2509;
+}
+
+.price-card[data-plan="app"] .best-for {
+  border-color: rgba(111,79,8,.32);
 }
 
 .price-back {
