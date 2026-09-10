@@ -1,125 +1,4 @@
-// ======================================
-// PHASE SHIFT STUDIO — PRICING SETTINGS
-// Edit your prices here.
-// ======================================
-
-const PRICING = {
-  landingPage: {
-    label: "Landing Page",
-    oneTime: 750,
-    monthly: 99
-  },
-
-  customWebsite: {
-    label: "Custom Website",
-    oneTime: 1250,
-    monthly: 179
-  },
-
-  webApp: {
-    label: "Web / Mobile App",
-    oneTime: null,
-    monthly: null
-  }
-};
-
-const BUDGET_OPTIONS = {
-  oneTime: [
-    "$750 – $1,500",
-    "$1,500 – $3,000",
-    "$3,000 – $5,000",
-    "$5,000+",
-    "Not sure yet"
-  ],
-
-  monthly: [
-    "$99 – $199 / month",
-    "$200 – $349 / month",
-    "$350+ / month",
-    "Not sure yet"
-  ]
-};
-
-// =========================
-// 1. SHARED PAGE REFERENCES
-// =========================
-// Cache the main elements we use more than once.
-const body = document.body;
-const menuToggle = document.querySelector('.menu-toggle');
-const nav = document.querySelector('.site-nav');
-
-
-// =========================
-// 2. MOBILE / SLIDE-OUT MENU
-// =========================
-// Clicking the MENU button toggles the "menu-open" class on <body>.
-// CSS watches for that class and slides the navigation panel in/out.
-menuToggle.addEventListener('click', () => {
-  const open = body.classList.toggle('menu-open');
-  // Keep the accessibility state in sync with whether the menu is open.
-  menuToggle.setAttribute('aria-expanded', String(open));
-});
-
-// When a navigation link is clicked, close the menu again.
-nav.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    body.classList.remove('menu-open');
-    menuToggle.setAttribute('aria-expanded', 'false');
-  });
-});
-
-// Also allow the Escape key to close the menu.
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    body.classList.remove('menu-open');
-    menuToggle.setAttribute('aria-expanded', 'false');
-  }
-});
-
-
-// =========================
-// 3. SCROLL-REVEAL ANIMATIONS
-// =========================
-// IntersectionObserver watches elements with the .reveal class.
-// When an element enters the viewport, we add .visible.
-// CSS handles the fade/slide animation.
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      // Stop watching after the first reveal so the animation only runs once.
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.12 });
-
-// Register every .reveal element with the observer.
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-// Start the repeating foil sheen after the pricing cards first enter view.
-const pricingGrid = document.querySelector('.pricing-grid');
-if (pricingGrid && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  const pricingSheenObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.querySelectorAll('.price-card').forEach((card, index) => {
-        window.setTimeout(() => card.classList.add('sheen-played'), index * 140);
-      });
-      pricingSheenObserver.unobserve(entry.target);
-    });
-  }, { threshold: 0.3 });
-
-  pricingSheenObserver.observe(pricingGrid);
-}
-
-
-
-
-// =========================
-// 4. PROJECT ENQUIRY FORM
-// =========================
-// Budget options change automatically to match the visitor's payment preference.
-
+// Existing enquiry integration; blocked in this local draft by preview-guard.js and preview-server policy.
 const form = document.getElementById('contact-form');
 const status = document.getElementById('form-status');
 
@@ -187,154 +66,108 @@ form.addEventListener('submit', async e => {
 });
 
 
-// =========================
-// 6. PRICING MODE TOGGLE
-// =========================
-// All pricing content lives in this object so it is easy to edit later.
-// "onetime" = upfront project purchase.
-// "monthly" = lower upfront commitment with ongoing support included.
-const pricingPlans = {
-  onetime: {
-    description: 'PAY ONCE. OWN THE FINISHED BUILD.',
-    note: 'Every project is quoted around the work that is actually useful. Add-on or plugin services may still require monthly billing.',
-    plans: {
-      landing: {
-        price: `FROM <strong>$${PRICING.landingPage.oneTime.toLocaleString()}</strong>`,
-        features: [
-          'Single high-impact page',
-          'Mobile responsive design',
-          'Contact / enquiry flow',
-          'Basic SEO setup',
-          'Google Business Profile creation'
-        ]
-      },
-      website: {
-        price: `FROM <strong>$${PRICING.customWebsite.oneTime.toLocaleString()}</strong>`,
-        features: [
-          'Multi-page custom website',
-          'Workflow-focused UX',
-          'Responsive development',
-          'Launch + handover'
-        ]
-      },
-      app: {
-        price: PRICING.webApp.oneTime == null
-          ? '<strong>CUSTOM</strong> QUOTE'
-          : `FROM <strong>$${PRICING.webApp.oneTime.toLocaleString()}</strong>`,
-        features: [
-          'Product planning',
-          'UI / UX design',
-          'Prototype or full build',
-          'Workflow planning'
-        ]
-      }
-    }
-  },
 
-  monthly: {
-    description: 'LOWER UPFRONT COST. SUPPORT + UPDATES INCLUDED.',
-    note: 'Monthly plans keep support, hosting and smaller improvements moving. Larger new features can be added later through a package or a quoted job.',
-    plans: {
-      landing: {
-        price: `FROM <strong>$${PRICING.landingPage.monthly.toLocaleString()}</strong> / MO`,
-        features: [
-          'Design + build included',
-          'Managed hosting included',
-          'Small content updates',
-          'Google Business Profile creation'
-        ]
-      },
-      website: {
-        price: `FROM <strong>$${PRICING.customWebsite.monthly.toLocaleString()}</strong> / MO`,
-        features: [
-          'Custom multi-page website',
-          'Managed hosting included',
-          'Ongoing content updates',
-          'Support + maintenance'
-        ]
-      },
-      app: {
-        price: PRICING.webApp.monthly == null
-          ? '<strong>CUSTOM</strong> / MO'
-          : `FROM <strong>$${PRICING.webApp.monthly.toLocaleString()}</strong> / MO`,
-        features: [
-          'Workflow + interface support',
-          'Hosting / deployment support',
-          'Ongoing improvements',
-          'Monthly scope matched to your app'
-        ]
-      }
-    }
-  }
+// Progressive enhancement: all navigation, content and default prices exist in HTML.
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+const menuButton = document.querySelector('.menu-toggle');
+const navigation = document.querySelector('.site-nav');
+document.body.classList.add('js-ready');
+menuButton.hidden = matchMedia('(min-width: 701px)').matches;
+function closeMenu(restoreFocus=false){document.body.classList.remove('menu-open');menuButton.setAttribute('aria-expanded','false');if(restoreFocus)menuButton.focus();}
+menuButton.addEventListener('click',()=>{const open=document.body.classList.toggle('menu-open');menuButton.setAttribute('aria-expanded',String(open));});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('menu-open'))closeMenu(true);});
+document.addEventListener('click',e=>{if(!e.target.closest('.site-header'))closeMenu();});
+document.addEventListener('focusin',e=>{if(!e.target.closest('.site-header'))closeMenu();});
+const mobileQuery=matchMedia('(max-width:700px)');
+mobileQuery.addEventListener('change',e=>{menuButton.hidden=!e.matches;closeMenu();});
+document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',()=>{
+  closeMenu();
+  const target=document.querySelector(link.getAttribute('href'));
+  if(target){target.setAttribute('tabindex','-1');target.focus({preventScroll:true});}
+  const type=link.dataset.enquiry;
+  if(type){const field=form.elements.type;field.value=type==='Custom Website'?'Website':type;}
+}));
+const destinations=[['top','top'],['work','work'],['services','services'],['process','services'],['workflow','services'],['community','community'],['contact','contact']];
+let scrollScheduled=false;
+function updateNavigation(){
+  scrollScheduled=false;let active='top';
+  for(const [id,navId] of destinations){if(document.getElementById(id).getBoundingClientRect().top<=170)active=navId;}
+  navigation.querySelectorAll('a').forEach(a=>{if(a.hash==='#'+active)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});
+}
+addEventListener('scroll',()=>{if(!scrollScheduled){scrollScheduled=true;requestAnimationFrame(updateNavigation);}},{passive:true});updateNavigation();
+
+const pricingData={
+ monthly:{description:'Lower upfront cost. Support + updates included.',note:'Monthly website plans include support, hosting and smaller improvements.',landing:{price:'<span>From</span><strong>$99</strong><span>/ month</span>',features:['Design + build included','Managed hosting included','Small content updates','Google Business Profile creation']},website:{price:'<span>From</span><strong>$179</strong><span>/ month</span>',features:['Custom multi-page website','Managed hosting included','Ongoing content updates','Support + maintenance']}},
+ onetime:{description:'Pay once. Own the finished build.',note:'Every project is quoted around the work that is actually useful. Ongoing website support can be discussed separately.',landing:{price:'<span>From</span><strong>$750</strong><span>one-time</span>',features:['Single high-impact page','Mobile responsive design','Contact / enquiry flow','Basic SEO setup','Google Business Profile creation']},website:{price:'<span>From</span><strong>$1,250</strong><span>one-time</span>',features:['Multi-page custom website','Workflow-focused UX','Responsive development','Launch + handover']}}
 };
-
-const pricingButtons = document.querySelectorAll('[data-pricing-mode]');
-const priceCards = document.querySelectorAll('.price-card[data-plan]');
-const pricingDescription = document.getElementById('pricing-mode-description');
-const pricingNote = document.getElementById('pricing-note');
-
-function setPriceCardFlipped(card, flipped) {
-  card.classList.toggle('flipped', flipped);
-  card.setAttribute('aria-expanded', String(flipped));
-  card.querySelector('.price-front').setAttribute('aria-hidden', String(flipped));
-  card.querySelector('.price-back').setAttribute('aria-hidden', String(!flipped));
-}
-
-priceCards.forEach(card => {
-  setPriceCardFlipped(card, false);
-
-  card.addEventListener('click', event => {
-    if (event.target.closest('a')) return;
-    setPriceCardFlipped(card, !card.classList.contains('flipped'));
-  });
-
-  card.addEventListener('keydown', event => {
-    if ((event.key === 'Enter' || event.key === ' ') && !event.target.closest('button, a')) {
-      event.preventDefault();
-      setPriceCardFlipped(card, !card.classList.contains('flipped'));
-    }
-  });
+document.querySelectorAll('[data-pricing-mode]').forEach(button=>button.addEventListener('click',()=>{
+ const mode=button.dataset.pricingMode;const data=pricingData[mode];
+ document.querySelectorAll('[data-pricing-mode]').forEach(b=>{b.setAttribute('aria-pressed',String(b===button));b.classList.toggle('active',b===button);});
+ document.getElementById('pricing-mode-description').textContent=data.description;
+ document.getElementById('pricing-note').textContent=data.note;
+ for(const plan of ['landing','website']){const card=document.querySelector(`[data-plan="${plan}"]`);card.querySelector('[data-price]').innerHTML=data[plan].price;card.querySelector('[data-features]').innerHTML=data[plan].features.map(f=>`<li>${f}</li>`).join('');}
+ const badge=document.querySelector('.landing .price-badge');badge.textContent=mode==='monthly'?'$0 CREATION FEE':'ONE-TIME BUILD';
+}));
+document.querySelectorAll('.price-card').forEach(card=>{
+ const reset=()=>{card.style.setProperty('--rx','0deg');card.style.setProperty('--ry','0deg');card.style.setProperty('--mx','50%');card.style.setProperty('--my','0%');};
+ card.addEventListener('pointermove',e=>{if(reduceMotion.matches||!finePointer.matches||e.pointerType==='touch')return;const box=card.getBoundingClientRect(),x=(e.clientX-box.left)/box.width,y=(e.clientY-box.top)/box.height;card.style.setProperty('--rx',`${(0.5-y)*5}deg`);card.style.setProperty('--ry',`${(x-0.5)*7}deg`);card.style.setProperty('--mx',`${x*100}%`);card.style.setProperty('--my',`${y*100}%`);});
+ card.addEventListener('pointerleave',reset);reduceMotion.addEventListener('change',reset);finePointer.addEventListener('change',reset);
 });
 
-// Render one payment mode across all three cards.
-function setPricingMode(mode) {
-  const selected = pricingPlans[mode];
-  if (!selected) return;
-
-  // Update the toggle's visual + accessibility state.
-  pricingButtons.forEach(button => {
-    const isActive = button.dataset.pricingMode === mode;
-    button.classList.toggle('active', isActive);
-    button.setAttribute('aria-pressed', String(isActive));
-  });
-
-  pricingDescription.textContent = selected.description;
-  pricingNote.textContent = selected.note;
-
-  // Brief fade/slide makes the content change feel deliberate rather than abrupt.
-  priceCards.forEach(card => card.classList.add('pricing-changing'));
-
-  window.setTimeout(() => {
-    priceCards.forEach(card => {
-      const plan = selected.plans[card.dataset.plan];
-      if (!plan) return;
-
-      card.querySelector('[data-price]').innerHTML = plan.price;
-      card.querySelector('[data-features]').innerHTML = plan.features
-        .map(feature => `<li>${feature}</li>`)
-        .join('');
-
-      card.classList.remove('pricing-changing');
-    });
-  }, 150);
+const processSection=document.querySelector('.process-section');
+const track=document.querySelector('.process-track');
+const rows=[...document.querySelectorAll('.process-row')];
+const highlight=document.querySelector('.process-highlight');
+// A clipped, aria-hidden copy keeps text white exactly where the highlight travels.
+// The semantic list below remains the single accessible source of process content.
+const highlightCopy=document.querySelector('.process-list').cloneNode(true);
+highlightCopy.classList.add('highlight-copy');highlightCopy.setAttribute('aria-hidden','true');
+highlight.append(highlightCopy);
+const pauseButton=document.getElementById('process-pause');
+let stepIndex=0,timer=null,manualPause=false,hoverPause=false,focusPause=false,visible=false;
+function drawHighlight(){
+ const row=rows[stepIndex];track.style.setProperty('--process-y',row.offsetTop+'px');highlight.style.height=row.offsetHeight+'px';highlight.style.backgroundColor=stepIndex%2?'#101115':'#c9141e';
+ rows.forEach((r,i)=>r.classList.toggle('is-active',!reduceMotion.matches&&i===stepIndex));
+ highlightCopy.style.transform=`translateY(-${row.offsetTop}px)`;
+ [...highlightCopy.children].forEach((r,i)=>r.style.height=rows[i].offsetHeight+'px');
+ track.classList.toggle('is-running',!reduceMotion.matches);
 }
+function syncProcess(){
+ clearInterval(timer);timer=null;pauseButton.hidden=reduceMotion.matches;
+ processSection.classList.toggle('is-paused',manualPause||hoverPause||focusPause);
+ if(reduceMotion.matches){track.classList.remove('is-running');rows.forEach(r=>r.classList.remove('is-active'));return;}
+ drawHighlight();
+ if(visible&&!document.hidden&&!manualPause&&!hoverPause&&!focusPause)timer=setInterval(()=>{stepIndex=(stepIndex+1)%rows.length;drawHighlight();},3000);
+}
+pauseButton.addEventListener('click',()=>{manualPause=!manualPause;pauseButton.setAttribute('aria-pressed',String(manualPause));pauseButton.innerHTML=manualPause?'Resume highlight <span aria-hidden="true">▷</span>':'Pause highlight <span aria-hidden="true">Ⅱ</span>';syncProcess();});
+track.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){hoverPause=true;syncProcess();}});track.addEventListener('pointerleave',()=>{hoverPause=false;syncProcess();});
+processSection.addEventListener('focusin',()=>{focusPause=true;syncProcess();});processSection.addEventListener('focusout',e=>{if(!processSection.contains(e.relatedTarget)){focusPause=false;syncProcess();}});
+new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;syncProcess();},{threshold:.1}).observe(track);
+new ResizeObserver(drawHighlight).observe(track);
+reduceMotion.addEventListener('change',syncProcess);document.addEventListener('visibilitychange',syncProcess);syncProcess();
 
-// Switch modes when either toggle button is clicked.
-pricingButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    setPricingMode(button.dataset.pricingMode);
-  });
-});
+// Re-entering the viewport replays the red heading ignition; reduced motion stays static.
+const glowingHeadings=[...document.querySelectorAll('.section-heading .eyebrow,.hero-kicker,.founder-copy>.eyebrow,.community-grid .eyebrow,.contact-copy>.eyebrow,.hero-copy h1>span,.community-grid h2>span,.contact-copy h2>span')];
+let headingObserver;
+function configureHeadingGlow(){
+ headingObserver?.disconnect();
+ glowingHeadings.forEach(el=>{el.classList.add('glow-ready');el.classList.remove('glow-visible');});
+ if(reduceMotion.matches){glowingHeadings.forEach(el=>el.classList.add('glow-visible'));return;}
+ headingObserver=new IntersectionObserver(entries=>{for(const entry of entries)entry.target.classList.toggle('glow-visible',entry.isIntersecting);},{threshold:.2,rootMargin:'-88px 0px -12% 0px'});
+ glowingHeadings.forEach(el=>headingObserver.observe(el));
+}
+configureHeadingGlow();reduceMotion.addEventListener('change',configureHeadingGlow);
 
-// Render the default pricing mode using the central PRICING settings.
-setPricingMode('monthly');
+
+// Offer borders use the same longer arrival and ember timing as red headings.
+const glowingOffers=[...document.querySelectorAll('.local-offer')];
+let offerObserver;
+function configureOfferGlow(){
+ offerObserver?.disconnect();
+ glowingOffers.forEach(el=>el.classList.remove('offer-glow-visible'));
+ if(reduceMotion.matches)return;
+ offerObserver=new IntersectionObserver(entries=>{for(const entry of entries)entry.target.classList.toggle('offer-glow-visible',entry.isIntersecting);},{threshold:.15,rootMargin:'-88px 0px -10% 0px'});
+ glowingOffers.forEach(el=>offerObserver.observe(el));
+}
+configureOfferGlow();reduceMotion.addEventListener('change',configureOfferGlow);
