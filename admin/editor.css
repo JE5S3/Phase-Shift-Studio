@@ -1,0 +1,28 @@
+/* Admin-only styles. This file is never loaded on the public website. */
+.admin-gate{width:min(460px,calc(100% - 40px));margin:10vh auto;padding:30px;background:#141518;border:1px solid #ffffff30}
+.admin-gate h1{font-size:42px;margin:18px 0}.admin-gate>p{font-size:16px}
+.admin-gate .admin-home{display:block;margin-bottom:35px;font-weight:700}
+.admin-gate form{display:grid;gap:18px;margin:24px 0}
+.admin-gate label{display:grid;gap:7px;font-size:14px}
+.admin-gate input{width:100%;padding:12px;background:#08090b;border:1px solid #ffffff55;color:#fff}
+#admin-message{min-height:26px;margin:18px 0;color:#ffb3b6}
+.admin-edit-mode{padding-bottom:90px}
+.admin-toolbar{position:fixed;bottom:0;left:0;right:0;z-index:1000;padding:14px max(20px,calc((100vw - 1280px)/2));background:#08090bf5;border-top:1px solid #ffffff55;display:flex;align-items:center;gap:12px;box-shadow:0 -5px 24px #0005}
+.admin-toolbar span{font-size:13px;line-height:1.5}.admin-toolbar .admin-status{margin-right:auto}
+.admin-toolbar button,.inline-editor button{font-size:14px;line-height:1.4;min-height:44px;padding:10px 15px;background:#202126;border:1px solid #ffffff50;color:#fff;border-radius:3px}
+.admin-toolbar .save,.inline-editor .done{background:#d31923;border-color:#d31923}
+.admin-toolbar button:disabled{opacity:.45;cursor:default}
+[data-editable]{cursor:text;outline-offset:5px}
+[data-editable]:hover,[data-editable]:focus-visible{outline:1px dashed currentColor}
+[data-editable]::after{content:' ✎';font:12px var(--mono);opacity:.6;vertical-align:middle}
+.highlight-copy [data-editable]::after{display:none}
+[data-edit-handle]::after{display:none}
+.admin-field-handle{padding:4px 8px;margin-left:8px;border:1px dashed currentColor;background:transparent;color:inherit;font-size:13px;line-height:1.4}
+.inline-editor{position:fixed;margin:0;width:min(480px,calc(100vw - 24px));max-height:80vh;padding:22px;background:#141518;color:#faf9f6;border:1px solid #ffffff75;border-radius:6px;box-shadow:0 18px 65px #0009;z-index:1100}
+.inline-editor::backdrop{background:#0005}
+.inline-editor h2{font-size:20px;margin:0 0 18px;letter-spacing:0}
+.inline-editor label{display:grid;gap:7px;margin-top:14px;font-size:13px;color:#ccc}
+.inline-editor textarea,.inline-editor input{width:100%;min-height:44px;padding:10px;background:#08090b;color:#fff;border:1px solid #ffffff70;font-size:16px;line-height:1.5;resize:vertical}
+.inline-editor .editor-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.inline-editor .editor-error{font-size:13px;min-height:20px;color:#ff9a9f;margin-top:12px}
+@media(max-width:700px){.admin-toolbar{flex-wrap:wrap;padding:10px 12px;gap:7px}.admin-toolbar .admin-status{width:100%;font-size:12px}.admin-toolbar button{flex:1;font-size:12px;padding:9px}.admin-edit-mode{padding-bottom:130px}}

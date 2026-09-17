@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Private editor | Phase Shift Studio</title>
+  <link rel="icon" href="/favicon.png">
+  <!-- EXISTING FONTS -->
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/admin/editor.css">
+</head>
+<body>
+  <main class="admin-gate" id="admin-gate">
+    <a href="/" class="admin-home">P/S · Phase Shift Studio</a>
+    <p class="eyebrow">PRIVATE WEBSITE EDITOR</p>
+    <h1>Welcome back.</h1>
+    <p>Log in to edit your website content.</p>
+    <form id="admin-login">
+      <label>Email<input name="email" type="email" autocomplete="username" required></label>
+      <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+      <button class="btn btn-primary" type="submit" disabled>Log in</button>
+    </form>
+    <p id="admin-message" role="status">Checking configuration…</p>
+    <a href="/">Back to the website</a>
+  </main>
+  <noscript>JavaScript is required for the private editor. The public website is available at <a href="/">/</a>.</noscript>
+  <script>window.PSS_ADMIN=true;</script>
+  <script src="/content-data.js"></script>
+  <script src="/content-runtime.js"></script>
+  <script src="/admin/editor.js"></script>
+</body>
+</html>

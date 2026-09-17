@@ -98,11 +98,13 @@ function updateNavigation(){
 addEventListener('scroll',()=>{if(!scrollScheduled){scrollScheduled=true;requestAnimationFrame(updateNavigation);}},{passive:true});updateNavigation();
 
 const pricingData={
- monthly:{description:'Lower upfront cost. Support + updates included.',note:'Monthly website plans include support, hosting and smaller improvements.',landing:{price:'<span>From</span><strong>$99</strong><span>/ month</span>',features:['Design + build included','Managed hosting included','Small content updates','Google Business Profile creation']},website:{price:'<span>From</span><strong>$199</strong><span>/ month</span>',features:['Custom multi-page website','Managed hosting included','Ongoing content updates','Support + maintenance']}},
- onetime:{description:'Pay once. Own the finished build.',note:'Every project is quoted around the work that is actually useful. Ongoing website support can be discussed separately.',landing:{price:'<span>From</span><strong>$499</strong><span>one-time</span>',features:['Single high-impact page','Mobile responsive design','Contact / enquiry flow','Basic SEO setup','Google Business Profile creation']},website:{price:'<span>From</span><strong>$1,450</strong><span>one-time</span>',features:['Multi-page custom website','Workflow-focused UX','Responsive development','Launch + handover']}}
+ monthly:{description:'Lower upfront cost. Support + updates included.',note:'Monthly website plans include support, hosting and smaller improvements.',landing:{price:'<span>starting from:</span><strong>$99</strong><span>/ month</span>',features:['Design + build included','Managed hosting included','Small content updates','Google Business Profile creation']},website:{price:'<span>starting from:</span><strong>$199</strong><span>/ month</span>',features:['Custom multi-page website','Managed hosting included','Ongoing content updates','Support + maintenance']}},
+ onetime:{description:'Pay once. Own the finished build.',note:'Every project is quoted around the work that is actually useful. Ongoing website support can be discussed separately.',landing:{price:'<span>starting from:</span><strong>$499</strong><span>one-time</span>',features:['Single high-impact page','Mobile responsive design','Contact / enquiry flow','Basic SEO setup','Google Business Profile creation']},website:{price:'<span>starting from:</span><strong>$1,450</strong><span>one-time</span>',features:['Multi-page custom website','Workflow-focused UX','Responsive development','Launch + handover']}}
 };
 document.querySelectorAll('[data-pricing-mode]').forEach(button=>button.addEventListener('click',()=>{
- const mode=button.dataset.pricingMode;const data=pricingData[mode];
+ const mode=button.dataset.pricingMode;
+ if(window.PSSContent){window.PSSContent.setPricingMode(mode);return;}
+ const data=pricingData[mode];
  document.querySelectorAll('[data-pricing-mode]').forEach(b=>{b.setAttribute('aria-pressed',String(b===button));b.classList.toggle('active',b===button);});
  document.getElementById('pricing-mode-description').textContent=data.description;
  document.getElementById('pricing-note').textContent=data.note;
