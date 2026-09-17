@@ -96,9 +96,9 @@ export const pricing = {
     description: 'Pay once. Own the finished build.',
     note: 'Every project is quoted around the work that is actually useful. Ongoing website support can be discussed separately.',
     badge: 'ONE-TIME BUILD',
-    landing: {price:499, suffix:'one-time', features:[
+    landing: {price:800, suffix:'one-time', features:[
       'Single high-impact page','Mobile responsive design','Contact / enquiry flow','Basic SEO setup','Google Business Profile creation']},
-    website: {price:1450, suffix:'one-time', features:[
+    website: {price:1790, suffix:'one-time', features:[
       'Multi-page custom website','Workflow-focused UX','Responsive development','Launch + handover']}
   }
 };

@@ -85,8 +85,8 @@ try{
     const invalid=await page.locator('a[href^="#"]').evaluateAll(links=>links.filter(a=>!document.querySelector(a.getAttribute('href'))).map(a=>a.getAttribute('href')));
     assert.deepEqual(invalid,[]);
     await page.locator('[data-pricing-mode="onetime"]').click();
-    assert.equal(await page.locator('.landing .price strong').textContent(),'$499');
-    assert.equal(await page.locator('.website .price strong').textContent(),'$1,450');
+    assert.equal(await page.locator('.landing .price strong').textContent(),'$800');
+    assert.equal(await page.locator('.website .price strong').textContent(),'$1,790');
     await page.locator('[data-pricing-mode="monthly"]').click();
     assert.equal(await page.locator('.website .price strong').textContent(),'$179');
     await page.locator('.landing summary').click();assert.ok(await page.locator('.landing details').getAttribute('open')!==null);
@@ -163,10 +163,10 @@ try{
   await adminPage.locator('.inline-editor .done').click();conflict=true;
   await adminPage.locator('.admin-toolbar .save').click();
   await waitUntil(adminPage,()=>document.querySelector('.admin-status').textContent.includes('Another session'));
-  assert.equal(snapshot.values['pricing.onetime.landing.price'],499);
+  assert.equal(snapshot.values['pricing.onetime.landing.price'],800);
   conflict=false;
   adminPage.once('dialog',d=>d.accept());await adminPage.locator('.admin-toolbar .revert').click();
-  assert.equal(await adminPage.locator('.landing .price strong').textContent(),'$499');
+  assert.equal(await adminPage.locator('.landing .price strong').textContent(),'$800');
   await adminPage.locator('.landing .price strong').click();
   await adminPage.screenshot({path:'test-results/admin-inline-price.png'});
   await adminPage.locator('.inline-editor button').filter({hasText:'Undo this edit'}).click();

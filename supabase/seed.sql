@@ -1147,7 +1147,7 @@ from jsonb_to_recordset($seed$[
     "section": "pricing",
     "content_key": "pricing.onetime.landing.price",
     "content_type": "price",
-    "content_value": 499,
+    "content_value": 800,
     "max_length": 2000
   },
   {
@@ -1196,7 +1196,7 @@ from jsonb_to_recordset($seed$[
     "section": "pricing",
     "content_key": "pricing.onetime.website.price",
     "content_type": "price",
-    "content_value": 1450,
+    "content_value": 1790,
     "max_length": 2000
   },
   {
