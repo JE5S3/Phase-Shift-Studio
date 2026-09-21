@@ -1,12 +1,13 @@
-PHASE SHIFT STUDIO — WEBSITE FILES
+PHASE SHIFT STUDIO — EXISTING WEBSITE + PRIVATE CONTENT EDITOR
 
-1. Open index.html in a browser to preview.
-2. Replace the placeholder contact email, email and portfolio examples with your own details.
-3. The contact form currently opens the visitor's email client using mailto:.
-   Replace this with Formspree, Web3Forms, Netlify Forms or your own backend for direct submissions.
-4. Upload index.html, styles.css and script.js together to GitHub Pages, Netlify, Vercel or your hosting provider.
+Read ADMIN-SETUP.md for SQL, policies, environment variables, admin user setup,
+Vercel settings and test results.
 
-Files:
-- index.html
-- styles.css
-- script.js
+Install: pnpm install --frozen-lockfile
+Build: pnpm run build
+Preview: pnpm run preview
+Tests: pnpm test
+
+Deploy the generated dist directory, not the raw source directory.
+Normal content edits use /admin and Supabase, not commits or redeploys.
+Public styling, legal pages, SEO, assets and enquiry integrations are preserved.

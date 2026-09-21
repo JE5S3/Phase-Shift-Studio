@@ -102,7 +102,9 @@ const pricingData={
  onetime:{description:'Pay once. Own the finished build.',note:'Every project is quoted around the work that is actually useful. Ongoing website support can be discussed separately.',landing:{price:'<span>starting from:</span><strong>$800</strong><span>one-time</span>',features:['Single high-impact page','Mobile responsive design','Contact / enquiry flow','Basic SEO setup','Google Business Profile creation']},website:{price:'<span>starting from:</span><strong>$1,790</strong><span>one-time</span>',features:['Multi-page custom website','Workflow-focused UX','Responsive development','Launch + handover']}}
 };
 document.querySelectorAll('[data-pricing-mode]').forEach(button=>button.addEventListener('click',()=>{
- const mode=button.dataset.pricingMode;const data=pricingData[mode];
+ const mode=button.dataset.pricingMode;
+ if(window.PSSContent){window.PSSContent.setPricingMode(mode);return;}
+ const data=pricingData[mode];
  document.querySelectorAll('[data-pricing-mode]').forEach(b=>{b.setAttribute('aria-pressed',String(b===button));b.classList.toggle('active',b===button);});
  document.getElementById('pricing-mode-description').textContent=data.description;
  document.getElementById('pricing-note').textContent=data.note;
