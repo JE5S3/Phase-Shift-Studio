@@ -4,6 +4,7 @@ import {fileURLToPath} from 'node:url';
 import {parseHTML} from 'linkedom';
 import {build} from 'esbuild';
 import {targets,pricing} from '../content/definition.mjs';
+import {connectCentralCms} from '../content/central-cms.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const out=path.join(root,'dist');
 // Local .env is optional. Vercel injects these values at build time.
@@ -81,7 +82,12 @@ for(const src of ['/content-data.js','/content-runtime.js']) {
   const s=document.createElement('script');s.src=src;anchor.before(s);
 }
 const apply=document.createElement('script');apply.textContent='window.PSSContent.apply();';document.body.append(apply);
+const publishedFallback=JSON.parse(await readFile(path.join(root,'content/central-cms-fallback.json'),'utf8'));
+const publicManifest=connectCentralCms(document,structuredClone(manifest),publishedFallback);
 await writeFile(path.join(out,'index.html'),document.toString());
+await writeFile(path.join(out,'cms-manifest.js'),'window.PSS_CONTENT_MANIFEST='+JSON.stringify(publicManifest)+';\n');
+await writeFile(path.join(root,'content/cms-manifest.generated.json'),JSON.stringify(publicManifest,null,2));
+await build({entryPoints:[path.join(root,'content/central-runtime.mjs')],bundle:true,format:'iife',target:'es2022',outfile:path.join(out,'cms-runtime.js'),minify:true});
 await writeFile(path.join(out,'content-data.js'),'window.PSS_CONTENT_CONFIG='+JSON.stringify({url,key})+
   ';\nwindow.PSS_CONTENT_MANIFEST='+JSON.stringify(manifest)+';\n');
 await build({entryPoints:[path.join(root,'content/runtime.mjs')],bundle:true,format:'iife',target:'es2022',
@@ -111,5 +117,6 @@ await writeFile(path.join(root,'supabase/seed.sql'),
   'as x(section text, content_key text, content_type text, content_value jsonb, max_length integer)\n'+
   'on conflict (content_key) do nothing;\n');
 await writeFile(path.join(root,'content/manifest.generated.json'),JSON.stringify(manifest,null,2));
-console.log('Built unchanged site + /admin; '+manifest.fields.length+' editable fields.');
-if(!url)console.log('Supabase unconfigured: public fallback works; /admin login is disabled until configured.');
+console.log('Built central CMS connection: '+publicManifest.fields.length+' text/pricing/contact fields and 4 photo slots; retained '+manifest.fields.length+' legacy editor fields.');
+if(!url)console.log('Legacy editor build has no Supabase configuration. The public page uses the approved central CMS origin and published fallback.');
+

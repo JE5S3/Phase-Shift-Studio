@@ -2,6 +2,11 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": false,
+  "redirects": [
+    { "source": "/admin", "destination": "https://phase-shift-cms.vercel.app/", "permanent": false },
+    { "source": "/admin/", "destination": "https://phase-shift-cms.vercel.app/", "permanent": false },
+    { "source": "/admin/index.html", "destination": "https://phase-shift-cms.vercel.app/", "permanent": false }
+  ],
   "rewrites": [
     { "source": "/admin", "destination": "/admin/index.html" },
     { "source": "/admin/", "destination": "/admin/index.html" }
@@ -17,6 +22,15 @@
     {
       "source": "/content-data.js",
       "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+    },
+    {
+      "source": "/cms-manifest.js",
+      "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+    },
+    {
+      "source": "/cms-runtime.js",
+      "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
     }
   ]
 }
+

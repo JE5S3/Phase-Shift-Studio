@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {parseHTML} from 'linkedom';
 import {WebsiteContent,validateValue,formatPrice} from '../content/core.mjs';
-const manifest=JSON.parse(await readFile('content/manifest.generated.json','utf8'));
+const manifest=JSON.parse(await readFile('content/cms-manifest.generated.json','utf8'));
 const html=await readFile('dist/index.html','utf8');
 function fixture(){
   const {document,window}=parseHTML(html);
@@ -57,3 +57,4 @@ test('SEO, enquiry structure, CSS and existing scripts are retained',async()=>{
   assert.equal(document.querySelectorAll('[contenteditable]').length,0);
   assert.equal(document.querySelector('script[src="/admin/editor.js"]'),null);
 });
+

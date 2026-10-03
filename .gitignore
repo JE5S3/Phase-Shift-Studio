@@ -5,3 +5,5 @@ dist/
 !.env.example
 test-results/
 content/manifest.generated.json
+content/cms-manifest.generated.json
+
