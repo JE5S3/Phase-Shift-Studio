@@ -1,5 +1,5 @@
 import {WebsiteContent,validateValue} from './core.mjs';
-export const CMS_ORIGIN='https://phase-shift-cms.vercel.app';
+export const CMS_ORIGIN='https://edit.phaseshiftstudio.com.au';
 
 // Extend the public page only. The retained legacy editor keeps its original manifest.
 export function connectCentralCms(document,manifest,fallback){
@@ -41,4 +41,3 @@ export function connectCentralCms(document,manifest,fallback){
   const runtime=document.createElement('script');runtime.src='/cms-runtime.js';runtime.setAttribute('data-site','phase-shift-studio');runtime.setAttribute('data-cms-origin',CMS_ORIGIN);anchor.before(runtime);
   return manifest;
 }
-

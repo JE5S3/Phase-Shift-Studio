@@ -49,3 +49,29 @@ test('the standalone runtime requests the CMS origin and keeps private previews 
   assert.equal(JSON.parse(cache.get('pss-cms-published:phase-shift-studio')).values['hero.heading'],'Published');
 });
 
+test('the real website loads published headings and accepts private drafts from the custom editor domain',async()=>{
+  const editorOrigin='https://edit.phaseshiftstudio.com.au';
+  const html=await readFile('dist/index.html','utf8');
+  const manifest=JSON.parse(await readFile('content/cms-manifest.generated.json','utf8'));
+  const fields=manifest.fields.map(f=>({key:f.key,type:f.type,maxLength:f.maxLength,default:f.value}));
+  const fallback=JSON.parse(await readFile('content/central-cms-fallback.json','utf8'));
+  const content=heading=>({revision:42,fields,values:{...fallback.values,'hero.heading.text_1':heading}});
+  const {document,window}=parseHTML(html);
+  const requests=[];
+  run(document,window,{manifest,fetchImpl:async url=>{requests.push(url);return {ok:true,json:async()=>content('SOFTWARE!!')};}});
+  await tick();
+  assert.deepEqual(requests,[editorOrigin+'/api/content?site=phase-shift-studio']);
+  assert.match(document.getElementById('hero-title').textContent,/SOFTWARE!!/);
+
+  const framed=parseHTML(html);
+  const {events,cache}=run(framed.document,framed.window,{manifest,framed:true,fetchImpl:async()=>({ok:true,json:async()=>content('SOFTWARE!!')})});
+  await tick();
+  const event={source:framed.window.parent,origin:editorOrigin,data:{type:'pss-cms-preview',site:'phase-shift-studio',content:content('PRIVATE DRAFT')}};
+  events.message({...event,origin:'https://untrusted.example'});
+  assert.match(framed.document.getElementById('hero-title').textContent,/SOFTWARE!!/);
+  events.message(event);
+  assert.match(framed.document.getElementById('hero-title').textContent,/PRIVATE DRAFT/);
+  assert.equal(JSON.parse(cache.get('pss-cms-published:phase-shift-studio')).values['hero.heading.text_1'],'SOFTWARE!!');
+  const config=JSON.parse(await readFile('vercel.json','utf8'));
+  assert(config.redirects.filter(r=>r.source.startsWith('/admin')).every(r=>r.destination===editorOrigin+'/'));
+});

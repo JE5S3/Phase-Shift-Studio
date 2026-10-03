@@ -3,9 +3,9 @@
   "outputDirectory": "dist",
   "cleanUrls": false,
   "redirects": [
-    { "source": "/admin", "destination": "https://phase-shift-cms.vercel.app/", "permanent": false },
-    { "source": "/admin/", "destination": "https://phase-shift-cms.vercel.app/", "permanent": false },
-    { "source": "/admin/index.html", "destination": "https://phase-shift-cms.vercel.app/", "permanent": false }
+    { "source": "/admin", "destination": "https://edit.phaseshiftstudio.com.au/", "permanent": false },
+    { "source": "/admin/", "destination": "https://edit.phaseshiftstudio.com.au/", "permanent": false },
+    { "source": "/admin/index.html", "destination": "https://edit.phaseshiftstudio.com.au/", "permanent": false }
   ],
   "rewrites": [
     { "source": "/admin", "destination": "/admin/index.html" },
@@ -33,4 +33,3 @@
     }
   ]
 }
-
