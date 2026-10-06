@@ -185,7 +185,16 @@
     "photos.project_1": "/pilot/assets/transport.svg",
     "photos.project_2": "/pilot/assets/quoting.svg",
     "photos.project_3": "/pilot/assets/fleet.svg",
-    "photos.project_4": "/pilot/assets/studio-preview.png"
+    "photos.project_4": "/pilot/assets/studio-preview.png",
+    "pricing.editor_portal.eyebrow.text_1": "YOUR SITE. YOUR CONTROL.",
+    "pricing.editor_portal.heading.text_1": "Make codeless website edits instantly.",
+    "pricing.editor_portal.description.text_1": "For $29.99 per month, access your own private edit portal and publish approved text and price updates from your phone or desktop. No coding, GitHub edits or redeployment required.",
+    "pricing.editor_portal.cta.text_1": "ADD THE EDIT PORTAL",
+    "pricing.editor_portal.availability.text_1": "Available for compatible Phase Shift-managed websites.",
+    "pricing.editor_portal.feature_1.text_1": "Private, secure login",
+    "pricing.editor_portal.feature_2.text_1": "Works on phone and desktop",
+    "pricing.editor_portal.feature_3.text_1": "Update text and prices, then publish instantly",
+    "pricing.editor_portal.price": 29.99
   }
 }
 

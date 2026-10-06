@@ -23,6 +23,11 @@ export const targets = [
   ['pricing.app_note', '.pricing-notes > p:nth-child(2)'],
   ['pricing.plugin_note', '.pricing-notes > p:nth-child(3)'],
   ['pricing.tax_note', '.pricing-notes > p:nth-child(4)'],
+  ['pricing.editor_portal.eyebrow', '.editor-portal-copy > .eyebrow'],
+  ['pricing.editor_portal.heading', '.editor-portal-copy > h3'],
+  ['pricing.editor_portal.description', '.editor-portal-copy > p:not(.eyebrow)'],
+  ['pricing.editor_portal.cta', '.editor-portal-action > a'],
+  ['pricing.editor_portal.availability', '.editor-portal-action > small'],
   ['promotion.heading', '.local-offer h3'],
   ['promotion.eyebrow', '.local-offer .eyebrow'],
   ['promotion.description', '.local-offer p:not(.eyebrow)'],
@@ -77,6 +82,8 @@ for (let i=1;i<=5;i++) targets.push({id:'pricing.app.feature_' + i,
   selector:'.price-card.app [data-features] > li:nth-child(' + i + ')'});
 for (let i=1;i<=3;i++) targets.push({id:'contact.reassurance_' + i,
   selector:'.contact-mini > span:nth-child(' + i + ')'});
+for (let i=1;i<=3;i++) targets.push({id:'pricing.editor_portal.feature_' + i,
+  selector:'.editor-portal-copy li:nth-child(' + i + ')'});
 
 // Preserve current visible prices. The old JS said $199 after a toggle while
 // the initially displayed website price was $179: use the visible $179 consistently.
