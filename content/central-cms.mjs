@@ -20,10 +20,13 @@ export function connectCentralCms(document,manifest,fallback){
   if(!location)throw new Error('Missing contact location');
   const separator=location.nodeValue.indexOf(' · ')+3;
   location.replaceWith(document.createTextNode(location.nodeValue.slice(0,separator)),infoSpan('contact.address',location.nodeValue.slice(separator)));
-  const footer=[...document.querySelector('.footer-bottom > span:first-child').childNodes].find(n=>n.nodeType===3&&n.nodeValue.includes(' · ABN '));
-  if(!footer)throw new Error('Missing footer location/ABN');
-  const [address,abn]=footer.nodeValue.split(' · ABN ');
-  footer.replaceWith(infoSpan('footer.address',address),document.createTextNode(' · ABN '),infoSpan('business.abn',abn));
+  const footer=[...document.querySelector('.footer-bottom > span:first-child').childNodes].find(n=>n.nodeType===3&&n.nodeValue.includes(' · ACN '));
+  if(!footer)throw new Error('Missing footer location/ACN');
+  const [address,identifiers]=footer.nodeValue.split(' · ACN ');
+  const [acn,abn]=identifiers.split(' · ABN ');
+  if(!abn)throw new Error('Missing verified company ABN');
+  const companyAbn=infoSpan('business.company_abn',abn);companyAbn.style.whiteSpace='nowrap';
+  footer.replaceWith(infoSpan('footer.address',address),document.createTextNode(' · ACN '),infoSpan('business.acn',acn),document.createTextNode(' · ABN '),companyAbn);
   document.querySelectorAll('.work-visual img').forEach((element,i)=>element.setAttribute('data-cms-field','photos.project_'+(i+1)));
   for(const field of manifest.fields){
     const value=fallback.values[field.key]??field.value;

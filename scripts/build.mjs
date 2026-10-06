@@ -106,7 +106,7 @@ let shell=await readFile(path.join(root,'admin/index.html'),'utf8');
 const fonts=[...document.head.querySelectorAll('link[href*="fonts."]')].map(el=>el.outerHTML).join('\n');
 shell=shell.replace('<!-- EXISTING FONTS -->',fonts);
 await writeFile(path.join(out,'admin/index.html'),shell);
-for(const name of ['styles.css','script.js','process-animation.js','privacy.html','terms.html','favicon.png','favicon.svg','sitemap.xml','CNAME']){
+for(const name of ['styles.css','script.js','process-animation.js','privacy.html','terms.html','terms-company-effective-2026-10-05-abn-updated-2026-10-06.html','privacy-company-effective-2026-10-05-abn-updated-2026-10-06.html','favicon.png','favicon.svg','sitemap.xml','CNAME']){
   await copyFile(path.join(root,name),path.join(out,name));
 }
 await cp(path.join(root,'assets'),path.join(out,'assets'),{recursive:true});

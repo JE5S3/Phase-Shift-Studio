@@ -23,7 +23,9 @@ test('the public build connects the approved fields while the retained editor ke
   const legacy=JSON.parse(await readFile('content/manifest.generated.json','utf8'));
   const current=JSON.parse(await readFile('content/cms-manifest.generated.json','utf8'));
   const fallback=JSON.parse(await readFile('content/central-cms-fallback.json','utf8'));
-  assert.equal(current.fields.length,legacy.fields.length+5);
+  assert.equal(current.fields.length,legacy.fields.length+6);
+  assert.equal(current.fields.find(f=>f.key==='business.company_abn').value,'80 702 929 977');
+  assert(!current.fields.some(f=>f.key==='business.abn'));
   for(const field of current.fields)assert.deepEqual(field.value,fallback.values[field.key]);
   assert(!legacy.fields.some(f=>f.key==='contact.address'));
   assert((await readFile('dist/admin/index.html','utf8')).includes('/content-runtime.js'));
@@ -36,6 +38,15 @@ test('a CMS outage preserves the current published text and both payment options
   assert.equal(document.querySelector('.landing [data-price] strong').textContent,'$99');
   window.PSSContent.setPricingMode('onetime');
   assert.equal(document.querySelector('.landing [data-price] strong').textContent,'$792');
+});
+
+test('legacy published ABN data cannot relabel the company footer',async()=>{
+  const {document,window}=parseHTML(await readFile('dist/index.html','utf8'));
+  const manifest=JSON.parse(await readFile('content/cms-manifest.generated.json','utf8'));
+  run(document,window,{manifest,fetchImpl:async()=>({ok:true,json:async()=>({revision:1,fields:[{key:'business.abn',type:'text',maxLength:200}],values:{'business.abn':'47 149 923 249'}})})});
+  await tick();
+  const footer=document.querySelector('.footer-bottom').textContent;
+  assert(footer.includes('ABN 80 702 929 977'));assert(!footer.includes('47 149 923 249'));
 });
 test('the standalone runtime requests the CMS origin and keeps private previews out of its public cache',async()=>{
   const {document,window}=parseHTML('<html><head><script src="/cms-runtime.js" data-cms-origin="'+CMS_ORIGIN+'" data-site="phase-shift-studio"></script></head><body><h1 data-cms-field="hero.heading">Fallback</h1></body></html>');
