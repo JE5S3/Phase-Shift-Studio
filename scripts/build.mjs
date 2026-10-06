@@ -61,6 +61,14 @@ for(const target of targets){
   }
   manifest.targets.push({id:target.id,bindings});
 }
+const editorPortalPrice=document.querySelector('[data-editor-portal-price]');
+if(!editorPortalPrice)throw new Error('Missing editor portal price');
+const editorPortalPriceValue=Number(editorPortalPrice.textContent.trim());
+field('pricing.editor_portal.price',editorPortalPriceValue,'price');
+editorPortalPrice.setAttribute('data-content-target','pricing.editor_portal.price');
+manifest.targets.push({id:'pricing.editor_portal.price',bindings:[{
+  key:'pricing.editor_portal.price',path:[0],before:'',after:''
+}]});
 field('pricing.prefix',pricing.prefix,'text',100);
 for(const mode of ['monthly','onetime']){
   for(const name of ['description','note'])field('pricing.'+mode+'.'+name,pricing[mode][name]);
@@ -119,4 +127,5 @@ await writeFile(path.join(root,'supabase/seed.sql'),
 await writeFile(path.join(root,'content/manifest.generated.json'),JSON.stringify(manifest,null,2));
 console.log('Built central CMS connection: '+publicManifest.fields.length+' text/pricing/contact fields and 4 photo slots; retained '+manifest.fields.length+' legacy editor fields.');
 if(!url)console.log('Legacy editor build has no Supabase configuration. The public page uses the approved central CMS origin and published fallback.');
+
 
