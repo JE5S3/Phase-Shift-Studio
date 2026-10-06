@@ -87,6 +87,14 @@ body:not(.js-ready) .pricing-toggle{display:none}
 @media(max-width:700px){.brand{gap:7px;padding:9px}.brand-name{font-size:11px;gap:.22em;letter-spacing:.025em}.brand-mark{font-size:24px}.site-header{gap:12px}.site-nav>a{font-size:12px}.footer-top>.brand{width:auto}.service-grid{gap:18px}.price-card h3{min-height:0}.price-card ul{min-height:0}.contact-form,.community-section,.work-card{backdrop-filter:blur(8px)}}
 @media(prefers-reduced-motion:reduce){.glow-ready:not(.glow-visible),.glow-ready.glow-visible{color:#ff565c!important;text-shadow:none;animation:none!important}.service-card:hover,.service-card:focus{transform:none}}
 @media(prefers-reduced-transparency:reduce){.work-card,.contact-form,.community-section,.founder-mark,.flow-note{background:#202126;backdrop-filter:none}}
+
+/* Codeless edit portal offer. */
+.editor-portal-offer{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(250px,.7fr);gap:42px;align-items:center;margin-top:38px;padding:38px 42px;background:linear-gradient(135deg,#111216 0%,#1b1c21 58%,#24080c 100%);color:var(--white);border:1px solid #ffffff24;box-shadow:0 24px 52px #0007,inset 0 1px 0 #ffffff12;overflow:hidden;position:relative}
+.editor-portal-offer::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 5%,#ffffff0b 34%,transparent 47%),radial-gradient(circle at 86% 45%,#e31b232e,transparent 30%);pointer-events:none}
+.editor-portal-offer>*{position:relative;z-index:1}.editor-portal-copy>.eyebrow{color:#ff666d;margin-bottom:15px}.editor-portal-copy h3{font:700 clamp(30px,3.4vw,48px)/1.02 var(--display);letter-spacing:-.045em;max-width:720px}.editor-portal-copy>p:not(.eyebrow){max-width:690px;margin-top:18px;color:#d3d3d7;font-size:17px;line-height:1.75}.editor-portal-copy ul{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:23px}.editor-portal-copy li{font:11px/1.5 var(--mono);letter-spacing:.04em;color:#f2f2ef}.editor-portal-copy li::before{content:"✓";color:#ff565c;margin-right:8px}.editor-portal-action{padding-left:34px;border-left:1px solid #ffffff24}.editor-portal-price{display:flex;align-items:flex-end;gap:6px;margin-bottom:22px}.editor-portal-price>span:first-child{font:600 24px/1.2 var(--display);align-self:flex-start;margin-top:8px}.editor-portal-price strong{font:700 clamp(48px,5vw,72px)/.9 var(--display);letter-spacing:-.06em}.editor-portal-price>span:last-child{font:11px/1.4 var(--mono);color:#c7c7cc;margin-bottom:5px}.editor-portal-action .btn{width:100%;justify-content:space-between}.editor-portal-action small{display:block;margin-top:13px;color:#aaaab1;font:10px/1.6 var(--mono)}
+@media(max-width:900px){.editor-portal-offer{grid-template-columns:1fr;gap:28px;padding:34px}.editor-portal-action{padding:25px 0 0;border-left:0;border-top:1px solid #ffffff24;max-width:420px}}
+@media(max-width:700px){.editor-portal-offer{margin-top:28px;padding:27px 23px}.editor-portal-copy h3{font-size:31px}.editor-portal-copy>p:not(.eyebrow){font-size:16px}.editor-portal-copy ul{display:grid;gap:10px}.editor-portal-price strong{font-size:58px}}
+@media(max-width:340px){.hero-copy{min-width:0}h1>span{white-space:normal}}
 @media print{.glow-ready:not(.glow-visible){color:#b71a22!important}.service-card{background:#fff;color:#111}}
 @media(hover:none),(pointer:coarse){.service-card:hover:not(:focus){background:linear-gradient(140deg,#17181ae8,#08090bf5);color:#f7f7f4;transform:none}}
 
@@ -99,6 +107,8 @@ body:not(.js-ready) .pricing-toggle{display:none}
  .price-card:hover,.price-card:focus-within{z-index:5;transform:translate3d(0,-15px,80px) rotateX(var(--rx)) rotateY(var(--ry));box-shadow:0 48px 42px -12px #000e,0 27px 65px -12px #d50d3666,0 0 22px #e31b231c,inset 0 1px 0 #fff9}
  .price-card.app:hover,.price-card.app:focus-within{border-color:#fff0bc;box-shadow:0 48px 42px -12px #000e,0 27px 65px -12px #b9173055,0 0 25px #dfb44d26,inset 0 1px 0 #fff7d9}
 }
+
+.editor-portal-copy ul{margin:23px 0 0;padding:0;list-style:none}
 
 /* Revision 4: unframed identity, matched founder monogram and longer glow. */
 .brand{background:none;border:0;box-shadow:none;padding:0;border-radius:0}
