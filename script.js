@@ -72,6 +72,11 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
 const menuButton = document.querySelector('.menu-toggle');
 const navigation = document.querySelector('.site-nav');
+const siteHeader = document.querySelector('.site-header');
+const scrollProgress = document.createElement('div');
+scrollProgress.className = 'scroll-progress';
+scrollProgress.setAttribute('aria-hidden', 'true');
+document.body.prepend(scrollProgress);
 document.body.classList.add('js-ready');
 menuButton.hidden = matchMedia('(min-width: 701px)').matches;
 function closeMenu(restoreFocus=false){document.body.classList.remove('menu-open');menuButton.setAttribute('aria-expanded','false');if(restoreFocus)menuButton.focus();}
@@ -94,63 +99,70 @@ function updateNavigation(){
   scrollScheduled=false;let active='top';
   for(const [id,navId] of destinations){if(document.getElementById(id).getBoundingClientRect().top<=170)active=navId;}
   navigation.querySelectorAll('a').forEach(a=>{if(a.hash==='#'+active)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});
+  const scrollRange=Math.max(1,document.documentElement.scrollHeight-innerHeight);
+  scrollProgress.style.transform=`scaleX(${Math.min(1,Math.max(0,scrollY/scrollRange))})`;
+  siteHeader.classList.toggle('is-scrolled',scrollY>18);
 }
 addEventListener('scroll',()=>{if(!scrollScheduled){scrollScheduled=true;requestAnimationFrame(updateNavigation);}},{passive:true});updateNavigation();
+addEventListener('resize',updateNavigation,{passive:true});
+new ResizeObserver(updateNavigation).observe(document.documentElement);
 
 const pricingData={
  monthly:{description:'Lower upfront cost. Support + updates included.',note:'Monthly website plans include support, hosting and smaller improvements.',landing:{price:'<span>starting from:</span><strong>$99</strong><span>/ month</span>',features:['Design + build included','Managed hosting included','Small content updates','Google Business Profile creation']},website:{price:'<span>starting from:</span><strong>$179</strong><span>/ month</span>',features:['Custom multi-page website','Managed hosting included','Ongoing content updates','Support + maintenance']}},
  onetime:{description:'Pay once. Own the finished build.',note:'Every project is quoted around the work that is actually useful. Ongoing website support can be discussed separately.',landing:{price:'<span>starting from:</span><strong>$800</strong><span>one-time</span>',features:['Single high-impact page','Mobile responsive design','Contact / enquiry flow','Basic SEO setup','Google Business Profile creation']},website:{price:'<span>starting from:</span><strong>$1,790</strong><span>one-time</span>',features:['Multi-page custom website','Workflow-focused UX','Responsive development','Launch + handover']}}
 };
-document.querySelectorAll('[data-pricing-mode]').forEach(button=>button.addEventListener('click',()=>{
- const mode=button.dataset.pricingMode;
+const pricingButtons=[...document.querySelectorAll('[data-pricing-mode]')];
+const pricingGrid=document.querySelector('.pricing-grid');
+let pricingTransitioning=false;
+function applyPricingMode(mode,button){
  if(window.PSSContent){window.PSSContent.setPricingMode(mode);return;}
  const data=pricingData[mode];
- document.querySelectorAll('[data-pricing-mode]').forEach(b=>{b.setAttribute('aria-pressed',String(b===button));b.classList.toggle('active',b===button);});
+ pricingButtons.forEach(b=>{b.setAttribute('aria-pressed',String(b===button));b.classList.toggle('active',b===button);});
  document.getElementById('pricing-mode-description').textContent=data.description;
  document.getElementById('pricing-note').textContent=data.note;
  for(const plan of ['landing','website']){const card=document.querySelector(`[data-plan="${plan}"]`);card.querySelector('[data-price]').innerHTML=data[plan].price;card.querySelector('[data-features]').innerHTML=data[plan].features.map(f=>`<li>${f}</li>`).join('');}
  const badge=document.querySelector('.landing .price-badge');badge.textContent=mode==='monthly'?'$0 CREATION FEE':'ONE-TIME BUILD';
-}));
+}
+async function changePricingMode(mode,button){
+ if(pricingTransitioning||button.classList.contains('active'))return;
+ const cards=[...document.querySelectorAll('.price-card')];
+ if(reduceMotion.matches||!cards.length){applyPricingMode(mode,button);return;}
+ pricingTransitioning=true;pricingGrid.classList.add('pricing-is-flipping');pricingGrid.setAttribute('aria-busy','true');
+ pricingButtons.forEach(b=>b.disabled=true);
+ const direction=mode==='onetime'?1:-1,duration=700,stagger=65;
+ const frames=[
+  {offset:0,transform:'translateY(0) rotateY(0deg) scale(1)',filter:'brightness(1)',opacity:1},
+  {offset:.43,transform:`translateY(-18px) rotateY(${direction*82}deg) scale(.975)`,filter:'brightness(.82)',opacity:1},
+  {offset:.499,transform:`translateY(-18px) rotateY(${direction*90}deg) scale(.975)`,filter:'brightness(.76)',opacity:.18},
+  {offset:.501,transform:`translateY(-18px) rotateY(${-direction*90}deg) scale(.975)`,filter:'brightness(.76)',opacity:.18},
+  {offset:.57,transform:`translateY(-18px) rotateY(${-direction*82}deg) scale(.975)`,filter:'brightness(.82)',opacity:1},
+  {offset:1,transform:'translateY(0) rotateY(0deg) scale(1)',filter:'brightness(1)',opacity:1}
+ ];
+ try{
+  const turns=cards.map((card,index)=>card.animate(frames,{duration,delay:index*stagger,easing:'cubic-bezier(.42,0,.18,1)',fill:'forwards'}));
+  await new Promise(resolve=>setTimeout(resolve,duration/2+stagger*(cards.length-1)/2));
+  applyPricingMode(mode,button);
+  await Promise.all(turns.map(animation=>animation.finished));turns.forEach(animation=>animation.cancel());
+ }finally{
+  pricingGrid.classList.remove('pricing-is-flipping');pricingGrid.removeAttribute('aria-busy');pricingButtons.forEach(b=>b.disabled=false);pricingTransitioning=false;
+ }
+}
+pricingButtons.forEach(button=>button.addEventListener('click',()=>changePricingMode(button.dataset.pricingMode,button)));
 document.querySelectorAll('.price-card').forEach(card=>{
  const reset=()=>{card.style.setProperty('--rx','0deg');card.style.setProperty('--ry','0deg');card.style.setProperty('--mx','50%');card.style.setProperty('--my','0%');};
  card.addEventListener('pointermove',e=>{if(reduceMotion.matches||!finePointer.matches||e.pointerType==='touch')return;const box=card.getBoundingClientRect(),x=(e.clientX-box.left)/box.width,y=(e.clientY-box.top)/box.height;card.style.setProperty('--rx',`${(0.5-y)*5}deg`);card.style.setProperty('--ry',`${(x-0.5)*7}deg`);card.style.setProperty('--mx',`${x*100}%`);card.style.setProperty('--my',`${y*100}%`);});
  card.addEventListener('pointerleave',reset);reduceMotion.addEventListener('change',reset);finePointer.addEventListener('change',reset);
 });
 
-const processSection=document.querySelector('.process-section');
-const track=document.querySelector('.process-track');
-const rows=[...document.querySelectorAll('.process-row')];
-const highlight=document.querySelector('.process-highlight');
-// A clipped, aria-hidden copy keeps text white exactly where the highlight travels.
-// The semantic list below remains the single accessible source of process content.
-const highlightCopy=document.querySelector('.process-list').cloneNode(true);
-highlightCopy.classList.add('highlight-copy');highlightCopy.setAttribute('aria-hidden','true');
-highlight.append(highlightCopy);
-const pauseButton=document.getElementById('process-pause');
-let stepIndex=0,timer=null,manualPause=false,hoverPause=false,focusPause=false,visible=false;
-function drawHighlight(){
- const row=rows[stepIndex];track.style.setProperty('--process-y',row.offsetTop+'px');highlight.style.height=row.offsetHeight+'px';highlight.style.backgroundColor=stepIndex%2?'#101115':'#c9141e';
- rows.forEach((r,i)=>r.classList.toggle('is-active',!reduceMotion.matches&&i===stepIndex));
- highlightCopy.style.transform=`translateY(-${row.offsetTop}px)`;
- [...highlightCopy.children].forEach((r,i)=>r.style.height=rows[i].offsetHeight+'px');
- track.classList.toggle('is-running',!reduceMotion.matches);
-}
-function syncProcess(){
- clearInterval(timer);timer=null;pauseButton.hidden=reduceMotion.matches;
- processSection.classList.toggle('is-paused',manualPause||hoverPause||focusPause);
- if(reduceMotion.matches){track.classList.remove('is-running');rows.forEach(r=>r.classList.remove('is-active'));return;}
- drawHighlight();
- if(visible&&!document.hidden&&!manualPause&&!hoverPause&&!focusPause)timer=setInterval(()=>{stepIndex=(stepIndex+1)%rows.length;drawHighlight();},3000);
-}
-pauseButton.addEventListener('click',()=>{manualPause=!manualPause;pauseButton.setAttribute('aria-pressed',String(manualPause));pauseButton.innerHTML=manualPause?'Resume highlight <span aria-hidden="true">▷</span>':'Pause highlight <span aria-hidden="true">Ⅱ</span>';syncProcess();});
-track.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){hoverPause=true;syncProcess();}});track.addEventListener('pointerleave',()=>{hoverPause=false;syncProcess();});
-processSection.addEventListener('focusin',()=>{focusPause=true;syncProcess();});processSection.addEventListener('focusout',e=>{if(!processSection.contains(e.relatedTarget)){focusPause=false;syncProcess();}});
-new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;syncProcess();},{threshold:.1}).observe(track);
-new ResizeObserver(drawHighlight).observe(track);
-reduceMotion.addEventListener('change',syncProcess);document.addEventListener('visibilitychange',syncProcess);syncProcess();
+// Delegation keeps the trace attached when published CMS content refreshes the cards.
+document.addEventListener('mouseover',e=>{const card=e.target.closest?.('.work-card');if(card&&!card.contains(e.relatedTarget)&&!reduceMotion.matches)card.classList.add('trace-active');});
+document.addEventListener('mouseout',e=>{const card=e.target.closest?.('.work-card');if(card&&!card.contains(e.relatedTarget))card.classList.remove('trace-active');});
+document.addEventListener('focusin',e=>{const card=e.target.closest?.('.work-card');if(card&&!reduceMotion.matches)card.classList.add('trace-active');});
+document.addEventListener('focusout',e=>{const card=e.target.closest?.('.work-card');if(card&&!card.contains(e.relatedTarget))card.classList.remove('trace-active');});
+reduceMotion.addEventListener('change',()=>document.querySelectorAll('.work-card').forEach(card=>card.classList.remove('trace-active')));
 
 // Re-entering the viewport replays the red heading ignition; reduced motion stays static.
-const glowingHeadings=[...document.querySelectorAll('.section-heading .eyebrow,.hero-kicker,.founder-copy>.eyebrow,.community-grid .eyebrow,.contact-copy>.eyebrow,.hero-copy h1>span,.community-grid h2>span,.contact-copy h2>span')];
+const glowingHeadings=[...document.querySelectorAll('.section-heading .eyebrow,.hero-kicker,.founder-copy>.eyebrow,.community-grid .eyebrow,.contact-copy>.eyebrow,.hero-line-accent .hero-line-inner,.community-grid h2>span,.contact-copy h2>span')];
 let headingObserver;
 function configureHeadingGlow(){
  headingObserver?.disconnect();
@@ -160,6 +172,36 @@ function configureHeadingGlow(){
  glowingHeadings.forEach(el=>headingObserver.observe(el));
 }
 configureHeadingGlow();reduceMotion.addEventListener('change',configureHeadingGlow);
+
+// The hero remains readable without JavaScript; motion is added only after setup succeeds.
+function configureHeroEntrance(){
+ document.body.classList.remove('motion-enhanced','hero-motion-ready');
+ if(reduceMotion.matches)return;
+ document.body.classList.add('motion-enhanced');
+ requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add('hero-motion-ready')));
+}
+configureHeroEntrance();reduceMotion.addEventListener('change',configureHeroEntrance);
+
+// One-time section reveals keep content visible by default and reveal focused content immediately.
+const revealItems=[...document.querySelectorAll([
+ '#work .section-heading','.work-disclosure','.work-grid',
+ '#services > .section-heading','.service-grid','.service-foot',
+ '#pricing .section-heading','.pricing-toolbar','.pricing-grid','.editor-portal-offer',
+ '.local-offer','#process .section-heading','.process-track',
+ '.founder-mark','.founder-copy','.community-grid','.community-future',
+ '.contact-copy','.contact-form'
+].join(','))];
+for(const item of revealItems)item.dataset.reveal='';
+let revealObserver;
+function showReveal(item){item.classList.remove('motion-pending');revealObserver?.unobserve(item);}
+function configureReveals(){
+ revealObserver?.disconnect();revealItems.forEach(item=>item.classList.remove('motion-pending'));
+ if(reduceMotion.matches||!('IntersectionObserver' in window))return;
+ revealObserver=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting)showReveal(entry.target);},{rootMargin:'0px 0px -6% 0px',threshold:.08});
+ for(const item of revealItems){if(item.getBoundingClientRect().top>=innerHeight*.82)item.classList.add('motion-pending');revealObserver.observe(item);}
+}
+document.addEventListener('focusin',event=>{const item=event.target.closest('[data-reveal]');if(item)showReveal(item);});
+configureReveals();reduceMotion.addEventListener('change',configureReveals);
 
 
 // Offer borders use the same longer arrival and ember timing as red headings.

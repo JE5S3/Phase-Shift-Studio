@@ -213,6 +213,41 @@ from jsonb_to_recordset($seed$[
     "max_length": 2000
   },
   {
+    "section": "pricing",
+    "content_key": "pricing.editor_portal.eyebrow.text_1",
+    "content_type": "text",
+    "content_value": "YOUR SITE. YOUR CONTROL.",
+    "max_length": 2000
+  },
+  {
+    "section": "pricing",
+    "content_key": "pricing.editor_portal.heading.text_1",
+    "content_type": "text",
+    "content_value": "Make codeless website edits instantly.",
+    "max_length": 300
+  },
+  {
+    "section": "pricing",
+    "content_key": "pricing.editor_portal.description.text_1",
+    "content_type": "text",
+    "content_value": "For $29.99 per month, access your own private edit portal and publish approved text and price updates from your phone or desktop. No coding, GitHub edits or redeployment required.",
+    "max_length": 2000
+  },
+  {
+    "section": "pricing",
+    "content_key": "pricing.editor_portal.cta.text_1",
+    "content_type": "text",
+    "content_value": "ADD THE EDIT PORTAL",
+    "max_length": 300
+  },
+  {
+    "section": "pricing",
+    "content_key": "pricing.editor_portal.availability.text_1",
+    "content_type": "text",
+    "content_value": "Available for compatible Phase Shift-managed websites.",
+    "max_length": 2000
+  },
+  {
     "section": "promotion",
     "content_key": "promotion.heading.text_1",
     "content_type": "text",
@@ -837,27 +872,6 @@ from jsonb_to_recordset($seed$[
   },
   {
     "section": "pricing",
-    "content_key": "pricing.landing.faq_question.text_1",
-    "content_type": "text",
-    "content_value": "Is this for me?",
-    "max_length": 2000
-  },
-  {
-    "section": "pricing",
-    "content_key": "pricing.landing.faq_answer.text_1",
-    "content_type": "text",
-    "content_value": "One clear page. One clear action.",
-    "max_length": 2000
-  },
-  {
-    "section": "pricing",
-    "content_key": "pricing.landing.faq_answer.text_2",
-    "content_type": "text",
-    "content_value": "For a focused offer, campaign or a first business presence.",
-    "max_length": 2000
-  },
-  {
-    "section": "pricing",
     "content_key": "pricing.landing.cta.text_1",
     "content_type": "text",
     "content_value": "GET A QUOTE",
@@ -879,27 +893,6 @@ from jsonb_to_recordset($seed$[
   },
   {
     "section": "pricing",
-    "content_key": "pricing.website.faq_question.text_1",
-    "content_type": "text",
-    "content_value": "Is this for me?",
-    "max_length": 2000
-  },
-  {
-    "section": "pricing",
-    "content_key": "pricing.website.faq_answer.text_1",
-    "content_type": "text",
-    "content_value": "Room to explain. Built to convert.",
-    "max_length": 2000
-  },
-  {
-    "section": "pricing",
-    "content_key": "pricing.website.faq_answer.text_2",
-    "content_type": "text",
-    "content_value": "For businesses with multiple services and a story that needs more room.",
-    "max_length": 2000
-  },
-  {
-    "section": "pricing",
     "content_key": "pricing.website.cta.text_1",
     "content_type": "text",
     "content_value": "GET A QUOTE",
@@ -918,27 +911,6 @@ from jsonb_to_recordset($seed$[
     "content_type": "text",
     "content_value": "PURPOSE-BUILT",
     "max_length": 300
-  },
-  {
-    "section": "pricing",
-    "content_key": "pricing.app.faq_question.text_1",
-    "content_type": "text",
-    "content_value": "Is this for me?",
-    "max_length": 2000
-  },
-  {
-    "section": "pricing",
-    "content_key": "pricing.app.faq_answer.text_1",
-    "content_type": "text",
-    "content_value": "Your process. Your tool.",
-    "max_length": 2000
-  },
-  {
-    "section": "pricing",
-    "content_key": "pricing.app.faq_answer.text_2",
-    "content_type": "text",
-    "content_value": "For quoting, operations, customer portals, fleet registers and internal systems.",
-    "max_length": 2000
   },
   {
     "section": "pricing",
@@ -1001,6 +973,34 @@ from jsonb_to_recordset($seed$[
     "content_key": "contact.reassurance_3.text_1",
     "content_type": "text",
     "content_value": "FREE QUOTING",
+    "max_length": 2000
+  },
+  {
+    "section": "pricing",
+    "content_key": "pricing.editor_portal.feature_1.text_1",
+    "content_type": "text",
+    "content_value": "Private, secure login",
+    "max_length": 2000
+  },
+  {
+    "section": "pricing",
+    "content_key": "pricing.editor_portal.feature_2.text_1",
+    "content_type": "text",
+    "content_value": "Works on phone and desktop",
+    "max_length": 2000
+  },
+  {
+    "section": "pricing",
+    "content_key": "pricing.editor_portal.feature_3.text_1",
+    "content_type": "text",
+    "content_value": "Update text and prices, then publish instantly",
+    "max_length": 2000
+  },
+  {
+    "section": "pricing",
+    "content_key": "pricing.editor_portal.price",
+    "content_type": "price",
+    "content_value": 29.99,
     "max_length": 2000
   },
   {

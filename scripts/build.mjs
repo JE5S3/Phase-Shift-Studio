@@ -27,6 +27,8 @@ await mkdir(path.join(out,'admin'),{recursive:true});
 await mkdir(path.join(root,'supabase'),{recursive:true});
 const source=await readFile(path.join(root,'index.html'),'utf8');
 const {document}=parseHTML(source);
+// Keep pricing focused: the expandable suitability prompts were removed from the cards.
+document.querySelectorAll('.price-card details').forEach(details=>details.remove());
 const manifest={version:1,fields:[],targets:[]};
 const seen=new Set();
 function field(key,value,type='text',maxLength=2000){

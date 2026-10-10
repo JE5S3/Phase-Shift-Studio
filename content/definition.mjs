@@ -75,7 +75,7 @@ for (let i = 1; i <= 4; i++) {
 for (const plan of ['landing', 'website', 'app']) {
   for (const [name, selector] of [
     ['title','.price-content > h3'], ['label','.price-content > .eyebrow'],
-    ['faq_question','summary'], ['faq_answer','details p'], ['cta','.price-content > a']
+    ['cta','.price-content > a']
   ]) targets.push({id:'pricing.' + plan + '.' + name, selector:'.price-card.' + plan + ' ' + selector});
 }
 for (let i=1;i<=5;i++) targets.push({id:'pricing.app.feature_' + i,

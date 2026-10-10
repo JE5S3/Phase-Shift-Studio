@@ -85,11 +85,13 @@ try{
     const invalid=await page.locator('a[href^="#"]').evaluateAll(links=>links.filter(a=>!document.querySelector(a.getAttribute('href'))).map(a=>a.getAttribute('href')));
     assert.deepEqual(invalid,[]);
     await page.locator('[data-pricing-mode="onetime"]').click();
-    assert.equal(await page.locator('.landing .price strong').textContent(),'$800');
+    await page.waitForFunction(()=>!document.querySelector('.pricing-grid').hasAttribute('aria-busy'));
+    assert.equal(await page.locator('.landing .price strong').textContent(),'$792');
     assert.equal(await page.locator('.website .price strong').textContent(),'$1,790');
     await page.locator('[data-pricing-mode="monthly"]').click();
+    await page.waitForFunction(()=>!document.querySelector('.pricing-grid').hasAttribute('aria-busy'));
     assert.equal(await page.locator('.website .price strong').textContent(),'$179');
-    await page.locator('.landing summary').click();assert.ok(await page.locator('.landing details').getAttribute('open')!==null);
+    assert.equal(await page.locator('.price-card details').count(),0);
     if(viewport.width<701){
       await page.evaluate(()=>scrollTo(0,0));await page.locator('.menu-toggle').click();
       assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'true');
@@ -100,16 +102,19 @@ try{
     await page.screenshot({path:'test-results/public-'+viewport.width+'.png'});
     await ctx.close();
   }
-  console.log('PASS: desktop/mobile 1440, 390, 320; pricing, FAQs, nav, no public controls; no introduced overflow.');
+  console.log('PASS: desktop/mobile 1440, 390, 320; pricing, nav, no public controls; no introduced overflow.');
   const publicContext=await context();const publicPage=await publicContext.newPage();await publicPage.goto(origin);
   await fillEnquiry(publicPage);await publicPage.locator('#contact-form button').click();
   await waitUntil(publicPage,()=>document.getElementById('form-status').textContent.includes('ENQUIRY SENT'));
   assert.equal(intakes,1);assert.equal(emails,1);
-  const firstY=await publicPage.locator('.process-track').evaluate(el=>el.style.getPropertyValue('--process-y'));
-  await publicPage.waitForFunction(y=>document.querySelector('.process-track').style.getPropertyValue('--process-y')!==y,firstY,{timeout:5000});
-  assert.equal(await publicPage.locator('.process-highlight .highlight-copy').count(),1);
-  await publicPage.locator('#process-pause').click();
-  assert.equal(await publicPage.locator('#process-pause').getAttribute('aria-pressed'),'true');
+  const processPage=await publicContext.newPage();await processPage.goto(origin+'/#process');
+  await processPage.locator('.process-track').evaluate(el=>{document.documentElement.style.scrollBehavior='auto';el.scrollIntoView({block:'center'});});
+  await processPage.mouse.move(0,0);
+  const firstPosition=await processPage.locator('.process-track').evaluate(el=>el.style.getPropertyValue('--process-position'));
+  assert.equal(firstPosition,'12.5%');
+  assert.equal(await processPage.locator('.process-list .is-active').count(),1);
+  await processPage.locator('#process-pause').click();
+  assert.equal(await processPage.locator('#process-pause').getAttribute('aria-pressed'),'true');
   console.log('PASS: public enquiry endpoints preserved (mocked); process animation advances and pause works.');
   // Supabase outage keeps defaults, with no blank content.
   const failContext=await context();await failContext.route('https://testproject.supabase.co/**',r=>r.abort());
@@ -131,10 +136,7 @@ try{
   await adminPage.locator('#admin-login button').click();
   await adminPage.waitForSelector('.admin-toolbar');
   assert.equal(await adminPage.locator('.service-card').count(),4);
-  await adminPage.locator('.landing summary').click({position:{x:20,y:20}});
-  await adminPage.locator('.landing details p').click();
-  assert.equal(await adminPage.locator('.inline-editor textarea').count(),2);
-  await adminPage.locator('.inline-editor .done').click();
+  assert.equal(await adminPage.locator('.price-card details').count(),0);
   await adminPage.locator('.landing .price-badge').click();
   assert.equal(await adminPage.locator('.inline-editor input[type="number"]').count(),1);
   assert.equal(await adminPage.locator('.inline-editor textarea').count(),1);
@@ -148,14 +150,15 @@ try{
   await waitUntil(adminPage,()=>document.querySelector('.admin-status').textContent==='Saved ✓');
   assert.equal(snapshot.values['pricing.monthly.landing.price'],125);assert.equal(writes,1);
   await publicPage.reload();await waitUntil(publicPage,()=>document.querySelector('.landing .price strong').textContent==='$125');
-  // Edit a segmented heading: red span and line breaks remain.
+  // Edit a segmented heading: the three masked line wrappers remain intact.
   const headingText=await adminPage.locator('h1').textContent();
   await adminPage.locator('h1').click();await adminPage.locator('.inline-editor textarea').first().fill('CLEAN SOFTWARE');
   await adminPage.locator('.inline-editor .done').click();
-  assert.equal(await adminPage.locator('h1 > span').count(),1);assert.equal(await adminPage.locator('h1 br').count(),2);
+  assert.equal(await adminPage.locator('h1 > .hero-line').count(),3);assert.equal(await adminPage.locator('h1 br').count(),0);
   adminPage.once('dialog',d=>d.accept());await adminPage.locator('.admin-toolbar .revert').click();
   assert.equal(await adminPage.locator('h1').textContent(),headingText);
   await adminPage.locator('[data-pricing-mode="onetime"]').click();
+  await adminPage.waitForFunction(()=>!document.querySelector('.pricing-grid').hasAttribute('aria-busy'));
   await adminPage.locator('#pricing-mode-description').click();
   assert.equal(await adminPage.locator('.inline-editor textarea').inputValue(),'Pay once. Own the finished build.');
   await adminPage.locator('.inline-editor button').filter({hasText:'Undo this edit'}).click();
@@ -163,10 +166,10 @@ try{
   await adminPage.locator('.inline-editor .done').click();conflict=true;
   await adminPage.locator('.admin-toolbar .save').click();
   await waitUntil(adminPage,()=>document.querySelector('.admin-status').textContent.includes('Another session'));
-  assert.equal(snapshot.values['pricing.onetime.landing.price'],800);
+  assert.equal(snapshot.values['pricing.onetime.landing.price'],792);
   conflict=false;
   adminPage.once('dialog',d=>d.accept());await adminPage.locator('.admin-toolbar .revert').click();
-  assert.equal(await adminPage.locator('.landing .price strong').textContent(),'$800');
+  assert.equal(await adminPage.locator('.landing .price strong').textContent(),'$792');
   await adminPage.locator('.landing .price strong').click();
   await adminPage.screenshot({path:'test-results/admin-inline-price.png'});
   await adminPage.locator('.inline-editor button').filter({hasText:'Undo this edit'}).click();
