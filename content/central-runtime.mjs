@@ -46,6 +46,9 @@ refresh();addEventListener('focus',refresh);document.addEventListener('visibilit
 addEventListener('message',e=>{
   if(window.parent===window||e.source!==window.parent||e.origin!==origin||e.data?.type!=='pss-cms-preview'||e.data?.site!==site)return;
   try {apply(e.data.content,e.data.photos);previewing=true;
+    // Contain Safari/phone scrolling inside this verified private preview.
+    document.documentElement.style.overscrollBehavior='none';
+    document.body.style.overscrollBehavior='none';
     if(['monthly','onetime'].includes(e.data.pricingMode))window.PSSContent?.setPricingMode(e.data.pricingMode);
     document.querySelectorAll('form').forEach(f=>f.addEventListener('submit',ev=>ev.preventDefault(),{once:false}));
     const target=e.data.section&&document.getElementById(e.data.section);

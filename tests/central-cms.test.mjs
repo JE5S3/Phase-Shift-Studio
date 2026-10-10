@@ -80,9 +80,15 @@ test('the real website loads published headings and accepts private drafts from 
   const event={source:framed.window.parent,origin:editorOrigin,data:{type:'pss-cms-preview',site:'phase-shift-studio',content:content('PRIVATE DRAFT')}};
   events.message({...event,origin:'https://untrusted.example'});
   assert.match(framed.document.getElementById('hero-title').textContent,/SOFTWARE!!/);
+  assert.notEqual(framed.document.documentElement.style.overscrollBehavior,'none');
   events.message(event);
   assert.match(framed.document.getElementById('hero-title').textContent,/PRIVATE DRAFT/);
+  assert.equal(framed.document.documentElement.style.overscrollBehavior,'none');
+  assert.equal(framed.document.body.style.overscrollBehavior,'none');
+  assert.notEqual(document.documentElement.style.overscrollBehavior,'none','Public website scrolling is unchanged');
   assert.equal(JSON.parse(cache.get('pss-cms-published:phase-shift-studio')).values['hero.heading.text_1'],'SOFTWARE!!');
   const config=JSON.parse(await readFile('vercel.json','utf8'));
   assert(config.redirects.filter(r=>r.source.startsWith('/admin')).every(r=>r.destination===editorOrigin+'/'));
 });
+
+
