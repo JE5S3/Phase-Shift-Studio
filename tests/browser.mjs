@@ -14,7 +14,7 @@ const manifest=JSON.parse(await readFile('content/manifest.generated.json','utf8
 const defaults=Object.fromEntries(manifest.fields.map(f=>[f.key,f.value]));
 const adminId='11111111-1111-4111-8111-111111111111';
 const jwt='eyJhbGciOiJIUzI1NiJ9.'+Buffer.from(JSON.stringify({sub:adminId,role:'authenticated',exp:Math.floor(Date.now()/1000)+3600})).toString('base64url')+'.mock-signature';
-let snapshot={revision:0,values:{...defaults}},isAdmin=true,conflict=false,intakes=0,emails=0,templateRequests=0,writes=0;
+let snapshot={revision:0,values:{...defaults}},isAdmin=true,conflict=false,intakes=0,templateRequests=0,writes=0;
 const errors=[];
 async function context(viewport={width:1440,height:1000},configured=true){
   const ctx=await browser.newContext({viewport});
@@ -47,7 +47,6 @@ async function context(viewport={width:1440,height:1000},configured=true){
     if(url.hostname==='txvorfcyvxwmwpkctndg.supabase.co'&&url.pathname.endsWith('/enquiry-intake')){
       intakes++;return route.fulfill({contentType:'application/json',body:'{"ok":true}'});
     }
-    if(url.hostname==='api.web3forms.com'){emails++;return route.fulfill({contentType:'application/json',body:'{"success":true}'});}
     // No remote fonts, tracking, auth, emails or other third-party traffic in tests.
     return route.fulfill({status:200,body:''});
   });
@@ -106,7 +105,7 @@ try{
   const publicContext=await context();const publicPage=await publicContext.newPage();await publicPage.goto(origin);
   await fillEnquiry(publicPage);await publicPage.locator('#contact-form button').click();
   await waitUntil(publicPage,()=>document.getElementById('form-status').textContent.includes('ENQUIRY SENT'));
-  assert.equal(intakes,1);assert.equal(emails,1);
+  assert.equal(intakes,1);
   const processPage=await publicContext.newPage();await processPage.goto(origin+'/#process');
   await processPage.locator('.process-track').evaluate(el=>{document.documentElement.style.scrollBehavior='auto';el.scrollIntoView({block:'center'});});
   await processPage.mouse.move(0,0);
@@ -115,7 +114,7 @@ try{
   assert.equal(await processPage.locator('.process-list .is-active').count(),1);
   await processPage.locator('#process-pause').click();
   assert.equal(await processPage.locator('#process-pause').getAttribute('aria-pressed'),'true');
-  console.log('PASS: public enquiry endpoints preserved (mocked); process animation advances and pause works.');
+  console.log('PASS: public enquiry endpoint preserved (mocked); process animation advances and pause works.');
   // Supabase outage keeps defaults, with no blank content.
   const failContext=await context();await failContext.route('https://testproject.supabase.co/**',r=>r.abort());
   const failPage=await failContext.newPage();await failPage.goto(origin);

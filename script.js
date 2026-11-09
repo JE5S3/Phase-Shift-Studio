@@ -33,10 +33,6 @@ form.addEventListener('submit', async e => {
       message: formData.get('message')
     };
 
-    formData.append('access_key', '12a67359-21bc-4c4f-b464-40081db6280a');
-    formData.append('subject', `New Phase Shift Studio Enquiry — ${projectType}`);
-    formData.append('from_name', 'Phase Shift Studio Website');
-
     const draftResponse = await fetch('https://txvorfcyvxwmwpkctndg.supabase.co/functions/v1/enquiry-intake', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -46,10 +42,6 @@ form.addEventListener('submit', async e => {
     if (!draftResponse.ok || !draftResult.ok) {
       throw new Error(draftResult.error || 'Draft quote creation failed');
     }
-
-    const response = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: formData });
-    const result = await response.json();
-    if (!response.ok || !result.success) throw new Error(result.message || 'Submission failed');
 
     status.classList.add('success');
     status.textContent = 'ENQUIRY SENT — THANK YOU.';
